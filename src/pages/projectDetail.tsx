@@ -1,5 +1,60 @@
 const ProjectDetail = () => {
-    return (<h1>Project Detail page</h1>)
+    // get projectById
+
+    return (
+        <>
+            <div>
+                <button>project overview</button>
+                <h1>Project Detail page</h1>
+            </div>
+            <div>
+                <h2>project title</h2>
+                {/* project.name */}
+                <h2>Tasks completed</h2>
+                {/* project.progress */}
+                <button>edit project</button>
+                <h3>project description</h3>
+                {/* project.description */}
+            </div>
+            <div>
+                <h2>Tasks</h2>
+                <div>
+                    <h3>ongoing tasks</h3>
+                    {/* {map project.tasks if status==ongoing} + onclick setTaskId*/}
+                    {/* task.name + task.content task.assignedDeveloper task.tags */}
+                    <div>
+                        <button>new task</button>
+                        <button>manage labels</button>
+                    </div>
+                </div>
+                <div>
+                    <h3>completed tasks</h3>
+                    {/* {map project.tasks if status==completed} + onclick setTaskId*/}
+                    {/* task.name + task.content task.assignedDeveloper task.tags */}
+                </div>
+                <div>
+                    <h3>scrapped tasks</h3>
+                    {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
+                    {/* task.name + task.content task.assignedDeveloper task.tags */}
+                </div>
+            </div>
+            <div>
+                <h4>logged in as:</h4> {/* {Account.name} */}
+                {/* set account store to null */}
+                <button>logout</button>
+                <h4>project owner</h4>
+                
+                <div>
+                <h4>dev team</h4>
+                {/* {map project.accounts if role==DEVELOPER */}
+                </div>
+                <div>
+                <h4>customers</h4>
+                {/* {map project.accounts if role==CUSTOMER */}
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default ProjectDetail;
