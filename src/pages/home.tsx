@@ -5,19 +5,19 @@ import { Form } from "react-bootstrap";
 
 const Homepage = () => {
 
-    const [show, setShow] = useState(false);
+    const [showNewAccountModal, setShowNewAccountModal] = useState(false);
     const handleSubmit = () => {
         console.log("handled submit")
     };
 
     return (
         <>
-            <h1>
+            <p>
                 Homepage
                 <br></br>
-                <Button variant="primary" value={"show modal"} onClick={() => setShow(true)} />
+                <Button variant="primary" value={"Create new account"} onClick={() => setShowNewAccountModal(true)} />
 
-                <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmit} show={show} setShow={setShow} >
+                <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmit} show={showNewAccountModal} setShow={setShowNewAccountModal} >
                     <Form>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
@@ -34,15 +34,9 @@ const Homepage = () => {
                         <Form.Group className="mb-3" controlId="formBasicCheckbox">
                             <Form.Check type="checkbox" label="Check me out" />
                         </Form.Group>
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
                     </Form>
-                    <p>This is the first item.</p>
-                    <p>This is the second item.</p>
-                    <p>This is the third item.</p>
                 </CustomModal>
-            </h1>
+            </p>
         </>
     )
 }
