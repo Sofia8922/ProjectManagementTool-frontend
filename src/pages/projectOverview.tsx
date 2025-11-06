@@ -1,10 +1,19 @@
+import NewProjectModal from "../Components/NewProjectModal";
+
+
 const ProjectOverview = () => {
+
+
 
     return (
         <>
-            <h1>
-                Project Overview page
-            </h1>
+            <p>
+                <h1>Project Overview page</h1>
+                <br></br>
+                <hr></hr>
+                new project modal
+                <NewProjectModal></NewProjectModal>
+            </p>
         </>
     );
 };

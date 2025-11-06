@@ -1,12 +1,14 @@
-import Modalreusable from "../Components/Modalreusable";
+import CreateNewAccountModal from "../Components/CreateNewAccountModal";
 
 const Homepage = () => {
+
     return (
         <>
-            <h1>
+            <p>
                 Homepage
-            </h1>
-            <Modalreusable />
+                <br></br>
+                <CreateNewAccountModal/>
+            </p>
         </>
     )
 }
