@@ -17,7 +17,7 @@ const ProjectDetail = () => {
                 {/* project.name */}
                 <h2>Tasks completed</h2>
                 {/* project.progress */}
-                <button>edit project</button>
+                <EditProjectModal/>
                 <h3>project description</h3>
                 {/* project.description */}
             </div>
@@ -27,20 +27,23 @@ const ProjectDetail = () => {
                     <h3>ongoing tasks</h3>
                     {/* {map project.tasks if status==ongoing} + onclick setTaskId*/}
                     {/* task.name + task.content task.assignedDeveloper task.tags */}
+                    <TaskDetailModal/>
                     <div>
-                        <button>new task</button>
-                        <button>manage labels</button>
+                        <NewTaskModal/>
+                        <ManageLabelsModal/>
                     </div>
                 </div>
                 <div>
                     <h3>completed tasks</h3>
                     {/* {map project.tasks if status==completed} + onclick setTaskId*/}
                     {/* task.name + task.content task.assignedDeveloper task.tags */}
+                    <TaskDetailModal/>
                 </div>
                 <div>
                     <h3>scrapped tasks</h3>
                     {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                     {/* task.name + task.content task.assignedDeveloper task.tags */}
+                    <TaskDetailModal/>
                 </div>
             </div>
             <div>

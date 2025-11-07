@@ -1,5 +1,7 @@
 // import account store
 
+import NewProjectModal from "../Components/NewProjectModal";
+
 const ProjectOverview = () => {
     
     return (
@@ -7,7 +9,7 @@ const ProjectOverview = () => {
             <div>
                 {/* als de rol van ingelogd account OWNER is dan wordt knop geshowed */}
                 {/* {Account.role === OWNER && <button>new project</button>} */}
-                <button>new project</button>
+                <NewProjectModal/>
                 <h1>
                     Project Overview page
                 </h1>
