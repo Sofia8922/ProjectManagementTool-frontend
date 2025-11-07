@@ -1,6 +1,7 @@
 import EditProjectModal from "../Components/EditProjectModal";
 import ManageLabelsModal from "../Components/ManageLabelsModal";
 import NewTaskModal from "../Components/NewTaskModal";
+import TaskDetailModal from "../Components/TaskDetailModal";
 
 const ProjectDetail = () => {
 
@@ -12,6 +13,7 @@ const ProjectDetail = () => {
             <EditProjectModal/>
             <NewTaskModal/>
             <ManageLabelsModal/>
+            <TaskDetailModal/>
 
 
 
