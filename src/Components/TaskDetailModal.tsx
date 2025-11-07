@@ -1,6 +1,7 @@
 import { Button, Form } from "react-bootstrap"
 import CustomModal from "./CustomModal"
 import { useState } from "react";
+import TaskEditModal from "./TaskEditModal";
 
 
 const TaskDetailModal = () => {
@@ -14,8 +15,12 @@ const TaskDetailModal = () => {
         <>
             <hr></hr>
             task detail modal
-            <Button variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
+
+            
+            <Button as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
             <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitTaskDetailModal} show={showTaskDetailModal} setShow={setShowTaskDetailModal} >
+                <TaskEditModal/>
+                
                 <Form>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>

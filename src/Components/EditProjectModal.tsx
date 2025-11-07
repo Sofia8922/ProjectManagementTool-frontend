@@ -16,7 +16,7 @@ const EditProjectModal = () => {
         <p>
             <hr></hr>
             Edit project modal
-            <Button variant="primary" value={"Edit project"} onClick={() => setShowEditProjectModal(true)} />
+            <Button as="input" variant="primary" value={"Edit project"} onClick={() => setShowEditProjectModal(true)} />
 
             <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitEditProject} show={showEditProjectModal} setShow={setShowEditProjectModal} >
                 <Form>
