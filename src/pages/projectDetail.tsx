@@ -1,3 +1,7 @@
+import EditProjectModal from "../Components/EditProjectModal";
+import ManageLabelsModal from "../Components/ManageLabelsModal";
+import NewTaskModal from "../Components/NewTaskModal";
+
 const ProjectDetail = () => {
     // get projectById
 
