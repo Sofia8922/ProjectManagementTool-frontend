@@ -15,7 +15,7 @@ const CreateNewAccountModal = () => {
         <p>
             <hr></hr>
             Create new account modal
-            <Button variant="primary" value={"Create new account"} onClick={() => setShowCreateNewAccountModal(true)} />
+            <Button as="input" variant="primary" value={"Create new account"} onClick={() => setShowCreateNewAccountModal(true)} />
 
             <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitCreateNewAccount} show={showCreateNewAccountModal} setShow={setShowCreateNewAccountModal} >
                 <Form>
