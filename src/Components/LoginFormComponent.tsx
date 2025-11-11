@@ -10,7 +10,8 @@ const LoginFormComponent = () => {
         mutationFn : async(loginData : LoginDTO) => {
             const response = await fetch(`${API_URL}/${loginData.email}/${loginData.password}`,
                 { method : 'POST',
-                  headers : { 'Content-Type' : 'application/json'}
+                  headers : { 'Content-Type' : 'application/json'},
+                  body : JSON.stringify('')
                 });
                 if (!response) throw new Error("Failed to login.")
                     else console.log("User succesfully logged in!")
