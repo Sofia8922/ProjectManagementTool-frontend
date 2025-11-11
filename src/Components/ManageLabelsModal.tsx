@@ -13,8 +13,6 @@ const ManageLabelsModal = () => {
 
     return (
         <>
-            <hr></hr>
-            New manage labels modal
             <Button as="input" variant="primary" value={"Manage labels"} onClick={() => setShowManageLabelsModal(true)} />
 
             <CustomModal title="hoi ik ben een modal" handleSubmit={handlemanageLabelsModal} show={showManageLabelsModal} setShow={setShowManageLabelsModal} >

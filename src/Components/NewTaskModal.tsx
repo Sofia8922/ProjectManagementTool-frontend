@@ -12,8 +12,6 @@ const NewTaskModal = () => {
 
     return (
         <>
-            <hr></hr>
-            New Task Modal
             <Button as="input" variant="primary" value={"New task"} onClick={() => setShowNewTaskModal(true)} />
 
             <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitNewTask} show={showNewTaskModal} setShow={setShowNewTaskModal} >

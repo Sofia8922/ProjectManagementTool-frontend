@@ -13,10 +13,6 @@ const TaskDetailModal = () => {
 
     return (
         <>
-            <hr></hr>
-            task detail modal
-
-            
             <Button as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
             <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitTaskDetailModal} show={showTaskDetailModal} setShow={setShowTaskDetailModal} >
                 <TaskEditModal/>
