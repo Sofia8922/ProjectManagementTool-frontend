@@ -33,57 +33,53 @@ const ProjectOverview = () => {
 
     return (
         <>
-        <Card>
-            <Col>
-                {/* als de rol van ingelogd account OWNER is dan wordt knop geshowed */}
-                {/* {Account.role === OWNER && <button>new project</button>} */}
-                {account.role === "OWNER" && <NewProjectModal />}
+            <Card>
+                <Col>
+                    {/* als de rol van ingelogd account OWNER is dan wordt knop geshowed */}
+                    {account.role === "OWNER" && <NewProjectModal />}
                 </Col>
                 <Col>
-                <h2>
-  Project Overview page
-                </h2>
+                    <h2>
+                        Project Overview page
+                    </h2>
+                    <Col>
+                        <h4>logged in as:</h4> {account.name}
+                        {/* set account store to null */}
+                        <button>logout</button>
+                    </Col>
                 </Col>
-                <Col>
-                <h4>logged in as:</h4> {/* {Account.name} */}
-                {/* set account store to null */}
-                <button>logout</button>
-                </Col>
-                </Row>
             </Card>
             <Card>
-            <div>
-                <h4>Ongoing projects</h4>
-                
-                {account.madeProjects && account.madeProjects.length > 0 ? (
-                    <>
-                        {account.madeProjects.map((madeProject) =>
-                            <Fragment key={madeProject.id}>
-                                <li>
-                                    <h5>{madeProject.name}</h5>
-                                    <p>{madeProject.description}</p>
-                                </li>
-                            </Fragment>
-                        )}
-                    </>) : (<>No projects found</>)}
-
-                {/* {map Account.projects if status==ongoing} + onclick setProjectId*/}
-                {/* acount.projects.name + account.projects.description account.projects.progress */}
-            </div>
+                <div>
+                    <h4>Ongoing projects</h4>
+                    {account.madeProjects && account.madeProjects.length > 0 ? (
+                        <>
+                            {account.madeProjects.map((madeProject) =>
+                                <Fragment key={madeProject.id}>
+                                    <li>
+                                        <h5>{madeProject.name}</h5>
+                                        <p>{madeProject.description}</p>
+                                    </li>
+                                </Fragment>
+                            )}
+                        </>) : (<>No projects found</>)}
+                    {/* {map Account.projects if status==ongoing} + onclick setProjectId*/}
+                    {/* acount.projects.name + account.projects.description account.projects.progress */}
+                </div>
             </Card>
             <Card>
-            <div>
-                <h4>Finished projects</h4>
-                {/* {map Account.projects if status==finished} */}
-                {/* acount.projects.name + account.projects.description account.projects.progress */}
-            </div>
+                <div>
+                    <h4>Finished projects</h4>
+                    {/* {map Account.projects if status==finished} */}
+                    {/* acount.projects.name + account.projects.description account.projects.progress */}
+                </div>
             </Card>
             <Card>
-            <div>
-                <h4>Scrapped projects</h4>
-                {/* {map Account.projects if status==scrapped} */}
-                {/* acount.projects.name + account.projects.description account.projects.progress */}
-            </div>
+                <div>
+                    <h4>Scrapped projects</h4>
+                    {/* {map Account.projects if status==scrapped} */}
+                    {/* acount.projects.name + account.projects.description account.projects.progress */}
+                </div>
             </Card>
         </>
     );
