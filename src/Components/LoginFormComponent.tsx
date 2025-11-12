@@ -8,18 +8,23 @@ const LoginFormComponent = () => {
 
     const loginRequest = useMutation({
         mutationFn : async(loginData : LoginDTO) => {
-            const response = await fetch(`${API_URL}/${loginData.email}/${loginData.password}`,
+            const response = await fetch(`${API_URL}/accounts/${loginData.email}/${loginData.password}`,
                 { method : 'POST',
-                  headers : { 'Content-Type' : 'application/json'},
-                  body : JSON.stringify('')
+                  headers : { 'Content-Type' : 'application/json'}
                 });
                 if (!response) throw new Error("Failed to login.")
-                    else console.log("User succesfully logged in!")
+                    else console.log("Login request succesfully made.")
                 return response.json();
         },
-        onSuccess: (data) => {
-            updateUser(data)
+        onSuccess: (response) => {
+            console.log("Name: ",response.name," ID: ",response.id);
+            if(response.name!==null) {
+            updateUser(response)
             changeGivenInput({ email: '', password:'' })
+         } else console.log("empty data")
+        },
+        onError: () => {
+            console.log("<generic failed login message>")
         }
     })
 
