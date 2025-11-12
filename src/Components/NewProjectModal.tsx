@@ -13,8 +13,6 @@ const NewProjectModal = () => {
     return (
         <>
             <p>
-                <hr></hr>
-                new project modal
                 <Button as="input" variant="primary" value={"new project"} onClick={() => setShowNewProjectModal(true)} />
 
                 <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitNewProject} show={showNewProjectModal} setShow={setShowNewProjectModal} >
