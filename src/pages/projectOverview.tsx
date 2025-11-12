@@ -4,6 +4,7 @@ import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
 import { Fragment } from "react/jsx-runtime";
+import type { ProjectShortDTO } from "../types/Project";
 
 const ProjectOverview = () => {
 
@@ -54,7 +55,7 @@ const ProjectOverview = () => {
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            {account.madeProjects.map((madeProject) =>
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
                                     <li>
                                         <h5>{madeProject.name}</h5>
