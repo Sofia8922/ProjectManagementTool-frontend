@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { API_URL, updateUser } from "../App"
-import type { LoginDTO } from "../models"
+import type { LoginDTO } from "../Types/models"
 
 const LoginFormComponent = () => {
     const [givenInput, changeGivenInput] = useState({ email: '', password: '' })
