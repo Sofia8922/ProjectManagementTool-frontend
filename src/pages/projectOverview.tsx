@@ -1,6 +1,6 @@
 // import account store
 
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
 import { Fragment } from "react/jsx-runtime";
