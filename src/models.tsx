@@ -10,4 +10,4 @@ export interface AccountCreationDTO {
     password:string    
 }
 
-export type RoleEnums = 'Owner' | 'Developer' | 'Customer'
+export type RoleEnums = 'OWNER' | 'DEVELOPER' | 'CUSTOMER'
