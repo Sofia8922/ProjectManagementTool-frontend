@@ -1,9 +1,12 @@
 // import account store
-// import useSmoothHorizontalScroll from 'use-smooth-horizontal-scroll';
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
 // import { Fragment } from "react/jsx-runtime";
+import type { ProjectShortDTO } from "../types/Project";
+import { useState } from "react";
+import { API_URL } from "../App";
+import { useUser } from "../stores/userStore";
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import ScrollLinked from "../Components/HorizontalScrollBar";
 // import type { ProjectShortDTO } from "../Types/Project";
@@ -11,22 +14,24 @@ import ScrollLinked from "../Components/HorizontalScrollBar";
 
 const ProjectOverview = () => {
 
-    // const { scrollContainerRef, handleScroll, scrollTo, isAtStart, isAtEnd } = useSmoothHorizontalScroll();
 
-    const {
-        data: account,
-        isLoading,
-        error
-    } = useQuery({
-        queryKey: ["account"],
-        queryFn: async () => {
-            const response = await fetch(`http://localhost:8080/accounts/1`);
-            if (!response.ok) {
-                throw new Error("account error")
-            }
-            return response.json();
-        },
-    })
+    const [projectId, setProjectId] = useState<number>(NaN);
+    const user = useUser();
+    console.log(user.name)
+        ; const {
+            data: account,
+            isLoading,
+            error
+        } = useQuery({
+            queryKey: ["account"],
+            queryFn: async () => {
+                const response = await fetch(`${API_URL}/accounts/1`);
+                if (!response.ok) {
+                    throw new Error("account error")
+                }
+                return response.json();
+            },
+        })
 
     if (isLoading) {
         return <p>loading</p>
