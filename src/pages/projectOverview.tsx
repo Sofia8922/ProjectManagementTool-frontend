@@ -1,11 +1,17 @@
 // import account store
-
+// import useSmoothHorizontalScroll from 'use-smooth-horizontal-scroll';
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
-import { Fragment } from "react/jsx-runtime";
+// import { Fragment } from "react/jsx-runtime";
+// import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
+import ScrollLinked from "../Components/HorizontalScrollBar";
+// import type { ProjectShortDTO } from "../Types/Project";
+// import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
 
 const ProjectOverview = () => {
+
+    // const { scrollContainerRef, handleScroll, scrollTo, isAtStart, isAtEnd } = useSmoothHorizontalScroll();
 
     const {
         data: account,
@@ -29,7 +35,20 @@ const ProjectOverview = () => {
         return <p>error</p>
     }
 
-    console.log(account)
+    console.log(account.madeProjects)
+
+    // console.log(typeof( account.madeProjects ))
+
+    // const accountArray = Object.entries(account.madeProjects)
+
+    // console.log(typeof(accountArray))
+    // const accountsArray2 = Object.entries(accountArray)
+
+    // console.log(typeof(accountsArray2))
+    //     let data: any = [1, 2, 3];
+    // let numbers: number[] = data as number[];
+
+    // const accountsArray : ProjectShortDTO[] = account.madeProjects as ProjectShortDTO[]
 
     return (
         <>
@@ -54,17 +73,9 @@ const ProjectOverview = () => {
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            {account.madeProjects.map((madeProject) =>
-                                <Fragment key={madeProject.id}>
-                                    <li>
-                                        <h5>{madeProject.name}</h5>
-                                        <p>{madeProject.description}</p>
-                                    </li>
-                                </Fragment>
-                            )}
+                            <ScrollLinked data={account.madeProjects}>
+                            </ScrollLinked>
                         </>) : (<>No projects found</>)}
-                    {/* {map Account.projects if status==ongoing} + onclick setProjectId*/}
-                    {/* acount.projects.name + account.projects.description account.projects.progress */}
                 </div>
             </Card>
             <Card>
