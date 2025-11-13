@@ -1,10 +1,8 @@
-// import account store
-
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
 import { Fragment } from "react/jsx-runtime";
-import type { ProjectShortDTO } from "../types/Project";
+import type { ProjectDTO, ProjectShortDTO } from "../types/Project";
 import { useState } from "react";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
@@ -13,29 +11,65 @@ const ProjectOverview = () => {
 
     const [projectId, setProjectId] = useState<number>(NaN);
     const user = useUser();
-    console.log(user.name)
-        ; const {
-            data: account,
-            isLoading,
-            error
-        } = useQuery({
-            queryKey: ["account"],
-            queryFn: async () => {
-                const response = await fetch(`${API_URL}/accounts/1`);
-                if (!response.ok) {
-                    throw new Error("account error")
-                }
-                return response.json();
-            },
-        })
+    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    const {
+        data: account,
+        isLoading: isAccountLoading,
+        error: accountError
+    } = useQuery({
+        queryKey: ["account"],
+        queryFn: async () => {
+            const response = await fetch(`${API_URL}/accounts/${user.id}`);
+            if (!response.ok) {
+                throw new Error("account error")
+            }
+            return response.json();
+        },
+    })
 
-    if (isLoading) {
+    // const {
+    //     data: projects,
+    //     isLoading,
+    //     error
+
+    // } = useQuery({
+    //     queryKey: ["projects"],
+    //     queryFn: async () => {
+    //         const response = await fetch(`${API_URL}/projects/accounts/1`);
+    //         if (!response.ok) {
+    //             throw new Error("projects error")
+    //         }
+    //         return response.json();
+    //     },
+    // })
+    // projects.map((project: ProjectDTO) => {
+    //     let completed = 0;
+    //     let notCompleted = 0;
+    //     console.log("completed: " + completed + "not completed: " + notCompleted)
+
+    //     project.tasks.forEach(task => {
+    //         if (task.status === "COMPLETED") {
+    //             completed += 1;
+    //         } else {
+    //             notCompleted += 1;
+    //         }
+    //     })
+
+    // }) 
+
+    // if (isLoading) {
+    //     return <p>loading</p>
+    // }
+    // if (error) {
+    //     return <p>error</p>
+    // }
+
+    if (isAccountLoading) {
         return <p>loading</p>
     }
-    if (error) {
+    if (accountError) {
         return <p>error</p>
     }
-
     console.log(projectId)
 
     return (
@@ -51,7 +85,6 @@ const ProjectOverview = () => {
                     </h2>
                     <Col>
                         <h4>logged in as:</h4> {account.name}
-                        {/* set account store to null */}
                         <button>logout</button>
                     </Col>
                 </Col>
