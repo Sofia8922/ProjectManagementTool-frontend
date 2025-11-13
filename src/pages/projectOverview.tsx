@@ -4,7 +4,7 @@ import NewProjectModal from "../Components/NewProjectModal";
 import { Fragment } from "react/jsx-runtime";
 import type { ProjectShortDTO } from "../types/Project";
 import { API_URL } from "../App";
-import { useUser } from "../stores/userStore";
+import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 
@@ -90,7 +90,7 @@ const ProjectOverview = () => {
                     </h2>
                     <Col>
                         <h4>logged in as:</h4> {account.name}
-                        <button>logout</button>
+                        <button onClick={() => logout()}>logout</button>
                     </Col>
                 </Col>
             </Card>

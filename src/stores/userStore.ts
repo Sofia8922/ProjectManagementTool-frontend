@@ -5,4 +5,9 @@ import type { AccountLoginReturnDTO } from "../types/Account";
 export const [useUser, updateUser] = createStore<AccountLoginReturnDTO>({
     id: NaN,
     name: "",
-});
+})
+
+export const logout = () => {
+    location.replace("/")
+    updateUser({id: NaN, name: ""})
+}

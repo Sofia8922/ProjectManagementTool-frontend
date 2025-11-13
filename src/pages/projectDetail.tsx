@@ -5,6 +5,7 @@ import NewTaskModal from "../Components/NewTaskModal";
 import TaskDetailModal from "../Components/TaskDetailModal";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import { useNavigate } from "react-router";
+import { logout } from "../stores/userStore";
 
 const ProjectDetail = () => {
     // get projectById
@@ -80,7 +81,7 @@ const ProjectDetail = () => {
                         <div>
                             <h4>logged in as:</h4> {/* {Account.name} */}
                             {/* set account store to null */}
-                            <button>logout</button>
+                            <button onClick={() => logout()}>logout</button>
                             <h4>project owner</h4>
 
                             <div>
