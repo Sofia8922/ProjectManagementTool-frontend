@@ -43,9 +43,11 @@ const CreateNewAccountModal = () => {
     })
 
     const handleSubmitCreateNewAccount = () => {
+        if (formData.email.includes('@')) {
         console.log("handled submit create new account")
         createUser.mutate(formData)
         console.log(formData)
+        } else { console.log("Email invalid!")}
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
