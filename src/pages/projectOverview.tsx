@@ -2,15 +2,17 @@ import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
 import { Fragment } from "react/jsx-runtime";
-import type { ProjectDTO, ProjectShortDTO } from "../types/Project";
-import { useState } from "react";
+import type { ProjectShortDTO } from "../types/Project";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
+import { useNavigate } from "react-router";
+import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 
 const ProjectOverview = () => {
 
-    const [projectId, setProjectId] = useState<number>(NaN);
     const user = useUser();
+    const projectId = useProjectId();
+    const navigate = useNavigate();
     console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
     const {
         data: account,
@@ -65,10 +67,13 @@ const ProjectOverview = () => {
     // }
 
     if (isAccountLoading) {
-        return <p>loading</p>
+        return <p>account loading</p>
     }
     if (accountError) {
-        return <p>error</p>
+        return <p>account error</p>
+    }
+    if (projectId) {
+        navigate("/projectDetails");
     }
     console.log(projectId)
 
@@ -96,7 +101,8 @@ const ProjectOverview = () => {
                         <>
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
-                                    <li onClick={() => setProjectId(madeProject.id)}>
+                                    <li onClick={() => updateProjectId(madeProject.id)
+                                    }>
                                         <h5>{madeProject.name}</h5>
                                         <p>{madeProject.description}</p>
                                     </li>
