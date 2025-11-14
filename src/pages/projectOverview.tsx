@@ -2,14 +2,15 @@
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
-// import { Fragment } from "react/jsx-runtime";
+ import { Fragment } from "react/jsx-runtime";
 import type { ProjectShortDTO } from "../types/Project";
 import { API_URL } from "../App";
-import { useUser } from "../stores/userStore";
+import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
+import ProgressCalculator from "../Components/ProgressCalculator";
+import ScrollLinked from "../Components/HorizontalScrollBar";
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
-// import ScrollLinked from "../Components/HorizontalScrollBar";
 import { Fragment } from "react/jsx-runtime";
 // import type { ProjectShortDTO } from "../Types/Project";
 // import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
@@ -21,6 +22,7 @@ const ProjectOverview = () => {
     const projectId = useProjectId();
     const navigate = useNavigate();
     console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    //add type to useQuery --> useQuerry<AccountDTO>
     const {
         data: account,
         isLoading: isAccountLoading,
@@ -75,7 +77,7 @@ const ProjectOverview = () => {
                     </h2>
                     <Col>
                         <h4>logged in as:</h4> {account.name}
-                        <button>logout</button>
+                        <button onClick={() => logout()}>logout</button>
                     </Col>
                 </Col>
             </Card>
@@ -91,6 +93,7 @@ const ProjectOverview = () => {
                                     }>
                                         <h5>{madeProject.name}</h5>
                                         <p>{madeProject.description}</p>
+                                        <ProgressCalculator id={madeProject.id}/>
                                     </li>
                                 </Fragment>
                             )}
