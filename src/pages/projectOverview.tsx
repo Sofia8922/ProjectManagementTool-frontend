@@ -16,7 +16,7 @@ import ProgressCalculator from "../Components/ProgressCalculator";
 
 const ProjectOverview = () => {
 
-const user = useUser();
+    const user = useUser();
     const projectId = useProjectId();
     const navigate = useNavigate();
     console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
@@ -28,7 +28,7 @@ const user = useUser();
     } = useQuery({
         queryKey: ["account"],
         queryFn: async () => {
-            const response = await fetch(`${API_URL}/accounts/${user.id}`);
+            const response = await fetch(`${API_URL}/${user.id}/accounts/${user.id}`);
             if (!response.ok) {
                 throw new Error("account error")
             }
@@ -84,7 +84,7 @@ const user = useUser();
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>                      
-                            {/* <ScrollLinked data={account.madeProjects}> */}
+                          {/* <ScrollLinked data={account.madeProjects}> */}
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
                                     <li onClick={() => updateProjectId(madeProject.id)
@@ -95,7 +95,7 @@ const user = useUser();
                                     </li>
                                 </Fragment>
                             )}
-                            {/* </ScrollLinked> */}
+                        {/* </ScrollLinked> */}
                         </>) : (<>No projects found</>)}
                 </div>
             </Card>

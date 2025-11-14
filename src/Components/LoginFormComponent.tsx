@@ -13,7 +13,7 @@ const LoginFormComponent = () => {
 
     const loginRequest = useMutation({
         mutationFn : async(loginData : LoginDTO) => {
-            const response = await fetch(`${API_URL}/accounts/${loginData.email}/${loginData.password}`,
+            const response = await fetch(`${API_URL}/${user.id}/accounts/${loginData.email}/${loginData.password}`,
                 { method : 'POST',
                   headers : { 'Content-Type' : 'application/json'}
                 });
