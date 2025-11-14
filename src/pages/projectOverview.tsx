@@ -9,7 +9,7 @@ import { useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
-import ScrollLinked from "../Components/HorizontalScrollBar";
+// import ScrollLinked from "../Components/HorizontalScrollBar";
 import { Fragment } from "react/jsx-runtime";
 // import type { ProjectShortDTO } from "../Types/Project";
 // import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
@@ -35,43 +35,6 @@ const ProjectOverview = () => {
             return response.json();
         },
     })
-
-    // const {
-    //     data: projects,
-    //     isLoading,
-    //     error
-
-    // } = useQuery({
-    //     queryKey: ["projects"],
-    //     queryFn: async () => {
-    //         const response = await fetch(`${API_URL}/projects/accounts/1`);
-    //         if (!response.ok) {
-    //             throw new Error("projects error")
-    //         }
-    //         return response.json();
-    //     },
-    // })
-    // projects.map((project: ProjectDTO) => {
-    //     let completed = 0;
-    //     let notCompleted = 0;
-    //     console.log("completed: " + completed + "not completed: " + notCompleted)
-
-    //     project.tasks.forEach(task => {
-    //         if (task.status === "COMPLETED") {
-    //             completed += 1;
-    //         } else {
-    //             notCompleted += 1;
-    //         }
-    //     })
-
-    // }) 
-
-    // if (isLoading) {
-    //     return <p>loading</p>
-    // }
-    // if (error) {
-    //     return <p>error</p>
-    // }
 
     if (isAccountLoading) {
         return <p>account loading</p>
