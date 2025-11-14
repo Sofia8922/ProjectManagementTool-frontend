@@ -7,6 +7,7 @@ import { API_URL } from "../App";
 import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
+import ProgressCalculator from "../Components/ProgressCalculator";
 
 const ProjectOverview = () => {
 
@@ -14,6 +15,7 @@ const ProjectOverview = () => {
     const projectId = useProjectId();
     const navigate = useNavigate();
     console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    //add type to useQuery --> useQuerry<AccountDTO>
     const {
         data: account,
         isLoading: isAccountLoading,
@@ -28,43 +30,6 @@ const ProjectOverview = () => {
             return response.json();
         },
     })
-
-    // const {
-    //     data: projects,
-    //     isLoading,
-    //     error
-
-    // } = useQuery({
-    //     queryKey: ["projects"],
-    //     queryFn: async () => {
-    //         const response = await fetch(`${API_URL}/projects/accounts/1`);
-    //         if (!response.ok) {
-    //             throw new Error("projects error")
-    //         }
-    //         return response.json();
-    //     },
-    // })
-    // projects.map((project: ProjectDTO) => {
-    //     let completed = 0;
-    //     let notCompleted = 0;
-    //     console.log("completed: " + completed + "not completed: " + notCompleted)
-
-    //     project.tasks.forEach(task => {
-    //         if (task.status === "COMPLETED") {
-    //             completed += 1;
-    //         } else {
-    //             notCompleted += 1;
-    //         }
-    //     })
-
-    // }) 
-
-    // if (isLoading) {
-    //     return <p>loading</p>
-    // }
-    // if (error) {
-    //     return <p>error</p>
-    // }
 
     if (isAccountLoading) {
         return <p>account loading</p>
@@ -105,6 +70,7 @@ const ProjectOverview = () => {
                                     }>
                                         <h5>{madeProject.name}</h5>
                                         <p>{madeProject.description}</p>
+                                        <ProgressCalculator id={madeProject.id}/>
                                     </li>
                                 </Fragment>
                             )}
