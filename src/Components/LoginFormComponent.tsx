@@ -2,12 +2,14 @@ import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { API_URL } from "../App"
 import { updateUser, useUser } from "../stores/userStore"
+import { useNavigate } from "react-router"
 import type { LoginDTO } from "../Types/models"
 
 
 const LoginFormComponent = () => {
     const [givenInput, changeGivenInput] = useState({ email: '', password: '' })
     const user = useUser();
+    const navigate = useNavigate();
 
     const loginRequest = useMutation({
         mutationFn : async(loginData : LoginDTO) => {
@@ -22,10 +24,10 @@ const LoginFormComponent = () => {
         onSuccess: (response) => {
             console.log("Name: ",response.name," ID: ",response.id);
             if(response.name!==null) {
-            updateUser({id: response, name: response.name})
-            location.replace(`/projectOverview`)
+            updateUser(response)
+            navigate("/projectOverview")
             changeGivenInput({ email: '', password:'' })
-            console.log("wat zit er in de store, id: " + user.id + "name: " + user.name)
+            console.log("wat zit er in de store, id: " + user.id + ", name: " + user.name)
             console.log(response)
          } else console.log("empty data")
         },

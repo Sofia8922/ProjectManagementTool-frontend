@@ -4,9 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
 // import { Fragment } from "react/jsx-runtime";
 import type { ProjectShortDTO } from "../types/Project";
-import { useState } from "react";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
+import { useNavigate } from "react-router";
+import { updateProjectId, useProjectId } from "../stores/projectIdStore";
+
+const ProjectOverview = () => {
+
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import ScrollLinked from "../Components/HorizontalScrollBar";
 // import type { ProjectShortDTO } from "../Types/Project";
@@ -17,28 +21,71 @@ const ProjectOverview = () => {
 
     const [projectId, setProjectId] = useState<number>(NaN);
     const user = useUser();
-    console.log(user.name)
-        ; const {
-            data: account,
-            isLoading,
-            error
-        } = useQuery({
-            queryKey: ["account"],
-            queryFn: async () => {
-                const response = await fetch(`${API_URL}/accounts/1`);
-                if (!response.ok) {
-                    throw new Error("account error")
-                }
-                return response.json();
-            },
-        })
+    const projectId = useProjectId();
+    const navigate = useNavigate();
+    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    const {
+        data: account,
+        isLoading: isAccountLoading,
+        error: accountError
+    } = useQuery({
+        queryKey: ["account"],
+        queryFn: async () => {
+            const response = await fetch(`${API_URL}/accounts/${user.id}`);
+            if (!response.ok) {
+                throw new Error("account error")
+            }
+            return response.json();
+        },
+    })
 
-    if (isLoading) {
-        return <p>loading</p>
+    // const {
+    //     data: projects,
+    //     isLoading,
+    //     error
+
+    // } = useQuery({
+    //     queryKey: ["projects"],
+    //     queryFn: async () => {
+    //         const response = await fetch(`${API_URL}/projects/accounts/1`);
+    //         if (!response.ok) {
+    //             throw new Error("projects error")
+    //         }
+    //         return response.json();
+    //     },
+    // })
+    // projects.map((project: ProjectDTO) => {
+    //     let completed = 0;
+    //     let notCompleted = 0;
+    //     console.log("completed: " + completed + "not completed: " + notCompleted)
+
+    //     project.tasks.forEach(task => {
+    //         if (task.status === "COMPLETED") {
+    //             completed += 1;
+    //         } else {
+    //             notCompleted += 1;
+    //         }
+    //     })
+
+    // }) 
+
+    // if (isLoading) {
+    //     return <p>loading</p>
+    // }
+    // if (error) {
+    //     return <p>error</p>
+    // }
+
+    if (isAccountLoading) {
+        return <p>account loading</p>
     }
-    if (error) {
-        return <p>error</p>
+    if (accountError) {
+        return <p>account error</p>
     }
+    if (projectId) {
+        navigate("/projectDetails");
+    }
+    console.log(projectId)
 
     console.log(account.madeProjects)
 
@@ -68,7 +115,6 @@ const ProjectOverview = () => {
                     </h2>
                     <Col>
                         <h4>logged in as:</h4> {account.name}
-                        {/* set account store to null */}
                         <button>logout</button>
                     </Col>
                 </Col>
@@ -77,8 +123,17 @@ const ProjectOverview = () => {
                 <div>
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
-                        <>
+                        <>                      
                             <ScrollLinked data={account.madeProjects}>
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                <Fragment key={madeProject.id}>
+                                    <li onClick={() => updateProjectId(madeProject.id)
+                                    }>
+                                        <h5>{madeProject.name}</h5>
+                                        <p>{madeProject.description}</p>
+                                    </li>
+                                </Fragment>
+                            )}
                             </ScrollLinked>
                         </>) : (<>No projects found</>)}
                 </div>
