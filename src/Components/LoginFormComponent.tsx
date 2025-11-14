@@ -8,6 +8,7 @@ import type { LoginDTO } from "../types/models"
 
 const LoginFormComponent = () => {
     const [givenInput, changeGivenInput] = useState({ email: '', password: '' })
+    const [errorMessage, setErrorMessage] = useState('')
     const user = useUser();
     const navigate = useNavigate();
 
@@ -23,16 +24,18 @@ const LoginFormComponent = () => {
         },
         onSuccess: (response) => {
             console.log("Name: ",response.name," ID: ",response.id);
-            if(response.name!==null) {
+            if(response.name!==undefined) {
             updateUser(response)
             navigate("/projectOverview")
             changeGivenInput({ email: '', password:'' })
             console.log("wat zit er in de store, id: " + user.id + ", name: " + user.name)
             console.log(response)
-         } else console.log("empty data")
+         } else if (response.message!==undefined) {
+            setErrorMessage(response.message)
+          }
         },
         onError: () => {
-            console.log("<generic failed login message>")
+            console.log("can't find backend")
         }
     })
 
@@ -50,6 +53,7 @@ const LoginFormComponent = () => {
         <form onSubmit={handleSubmit}>
             <h5>LOGIN</h5>
             <div>
+                {errorMessage && (<p style={{color:'red'}} className="error">{errorMessage}</p>)}
                 <label htmlFor="username"> Enter Email Address:</label>
                 <input type="text" id="email" name="email" value={givenInput.email} onChange={handleChange} />
             </div>
