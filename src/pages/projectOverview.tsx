@@ -2,26 +2,21 @@
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
-// import { Fragment } from "react/jsx-runtime";
+ import { Fragment } from "react/jsx-runtime";
 import type { ProjectShortDTO } from "../types/Project";
 import { API_URL } from "../App";
 import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import ProgressCalculator from "../Components/ProgressCalculator";
-
-const ProjectOverview = () => {
-
-// import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import ScrollLinked from "../Components/HorizontalScrollBar";
+// import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 // import type { ProjectShortDTO } from "../Types/Project";
 // import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
 
 const ProjectOverview = () => {
 
-
-    const [projectId, setProjectId] = useState<number>(NaN);
-    const user = useUser();
+const user = useUser();
     const projectId = useProjectId();
     const navigate = useNavigate();
     console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
@@ -89,7 +84,7 @@ const ProjectOverview = () => {
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>                      
-                            <ScrollLinked data={account.madeProjects}>
+                            {/* <ScrollLinked data={account.madeProjects}> */}
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
                                     <li onClick={() => updateProjectId(madeProject.id)
@@ -100,7 +95,7 @@ const ProjectOverview = () => {
                                     </li>
                                 </Fragment>
                             )}
-                            </ScrollLinked>
+                            {/* </ScrollLinked> */}
                         </>) : (<>No projects found</>)}
                 </div>
             </Card>
