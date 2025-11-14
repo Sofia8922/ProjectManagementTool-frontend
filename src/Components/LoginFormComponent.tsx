@@ -3,7 +3,7 @@ import { useState } from "react"
 import { API_URL } from "../App"
 import { updateUser, useUser } from "../stores/userStore"
 import { useNavigate } from "react-router"
-import type { LoginDTO } from "../Types/models"
+import type { LoginDTO } from "../types/models"
 
 
 const LoginFormComponent = () => {
@@ -13,7 +13,7 @@ const LoginFormComponent = () => {
 
     const loginRequest = useMutation({
         mutationFn : async(loginData : LoginDTO) => {
-            const response = await fetch(`${API_URL}/accounts/${loginData.email}/${loginData.password}`,
+            const response = await fetch(`${API_URL}/${user.id}/accounts/${loginData.email}/${loginData.password}`,
                 { method : 'POST',
                   headers : { 'Content-Type' : 'application/json'}
                 });
