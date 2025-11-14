@@ -8,18 +8,15 @@ import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
-
-const ProjectOverview = () => {
-
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import ScrollLinked from "../Components/HorizontalScrollBar";
+import { Fragment } from "react/jsx-runtime";
 // import type { ProjectShortDTO } from "../Types/Project";
 // import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
 
 const ProjectOverview = () => {
 
-
-    const [projectId, setProjectId] = useState<number>(NaN);
+    //const [projectId, setProjectId] = useState<number>(NaN);
     const user = useUser();
     const projectId = useProjectId();
     const navigate = useNavigate();
@@ -31,7 +28,7 @@ const ProjectOverview = () => {
     } = useQuery({
         queryKey: ["account"],
         queryFn: async () => {
-            const response = await fetch(`${API_URL}/accounts/${user.id}`);
+            const response = await fetch(`${API_URL}/${user.id}/accounts/${user.id}`);
             if (!response.ok) {
                 throw new Error("account error")
             }
@@ -124,7 +121,7 @@ const ProjectOverview = () => {
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>                      
-                            <ScrollLinked data={account.madeProjects}>
+                          {/* <ScrollLinked data={account.madeProjects}> */}
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
                                     <li onClick={() => updateProjectId(madeProject.id)
@@ -134,7 +131,7 @@ const ProjectOverview = () => {
                                     </li>
                                 </Fragment>
                             )}
-                            </ScrollLinked>
+                        {/* </ScrollLinked> */}
                         </>) : (<>No projects found</>)}
                 </div>
             </Card>
