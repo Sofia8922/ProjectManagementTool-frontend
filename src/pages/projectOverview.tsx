@@ -2,14 +2,13 @@
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
- import { Fragment } from "react/jsx-runtime";
 import type { ProjectShortDTO } from "../types/Project";
 import { API_URL } from "../App";
 import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import ProgressCalculator from "../Components/ProgressCalculator";
-import ScrollLinked from "../Components/HorizontalScrollBar";
+// import ScrollLinked from "../Components/HorizontalScrollBar";
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import { Fragment } from "react/jsx-runtime";
 // import type { ProjectShortDTO } from "../Types/Project";
