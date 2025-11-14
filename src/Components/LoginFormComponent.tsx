@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { API_URL } from "../App"
-import type { LoginDTO } from "../models"
 import { updateUser, useUser } from "../stores/userStore"
 import { useNavigate } from "react-router"
+import type { LoginDTO } from "../Types/models"
 
 
 const LoginFormComponent = () => {
