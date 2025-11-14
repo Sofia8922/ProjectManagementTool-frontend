@@ -3,7 +3,7 @@ import CustomModal from "./CustomModal"
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "../App";
-import type { AccountCreationDTO, RoleEnums } from "../Types/models";
+import type { AccountCreationDTO, RoleEnums } from "../types/models";
 
 interface CreationData{
     name:string,

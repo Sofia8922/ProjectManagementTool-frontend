@@ -9,7 +9,7 @@ import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import ProgressCalculator from "../Components/ProgressCalculator";
-import ScrollLinked from "../Components/HorizontalScrollBar";
+// import ScrollLinked from "../Components/HorizontalScrollBar";
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 // import type { ProjectShortDTO } from "../Types/Project";
 // import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';

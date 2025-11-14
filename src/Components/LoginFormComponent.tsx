@@ -3,7 +3,7 @@ import { useState } from "react"
 import { API_URL } from "../App"
 import { updateUser, useUser } from "../stores/userStore"
 import { useNavigate } from "react-router"
-import type { LoginDTO } from "../Types/models"
+import type { LoginDTO } from "../types/models"
 
 
 const LoginFormComponent = () => {
