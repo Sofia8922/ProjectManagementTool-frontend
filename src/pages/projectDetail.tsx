@@ -3,10 +3,6 @@ import EditProjectModal from "../Components/EditProjectModal";
 import ManageLabelsModal from "../Components/ManageLabelsModal";
 import NewTaskModal from "../Components/NewTaskModal";
 import TaskDetailModal from "../Components/TaskDetailModal";
-import { useQuery } from "@tanstack/react-query";
-import { API_URL } from "../App";
-import { useUser } from "../stores/userStore";
-import ScrollLinkedTasks from "../Components/HorizontalScrollBarTasks";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import { useNavigate } from "react-router";
 import { logout } from "../stores/userStore";
@@ -16,29 +12,6 @@ const ProjectDetail = () => {
     const projectId = useProjectId();
     const navigate = useNavigate();
     console.log("id: " + projectId)
-    const user = useUser();
-    console.log(user.name)
-        ; const {
-            data: project,
-            isLoading,
-            error
-        } = useQuery({
-            queryKey: ["project"],
-            queryFn: async () => {
-                const response = await fetch(`${API_URL}/projects/${projectId}`);
-                if (!response.ok) {
-                    throw new Error("account error")
-                }
-                return response.json();
-            },
-        })
-
-    if (isLoading) {
-        return <p>loading</p>
-    }
-    if (error) {
-        return <p>error</p>
-    }
 
     if (!projectId) {
         navigate("/projectOverview")
@@ -77,40 +50,25 @@ const ProjectDetail = () => {
                             <Card>
                                 <Card>
                                     <h3>ongoing tasks</h3>
-                                    {project.tasks && project.tasks.length > 0 ? (
-                                        <>
-                                            <ScrollLinkedTasks data={project.tasks.filter((tasks: { status: string; }) => tasks.status === "ongoing")}>
-                                            </ScrollLinkedTasks>
-                                        </>) : (<>No projects found</>)}
                                     {/* {map project.tasks if status==ongoing} + onclick setTaskId*/}
                                     {/* task.name + task.content task.assignedDeveloper task.tags */}
                                     <TaskDetailModal />
                                 </Card>
                                 <Card>
-                                    <Row className="justify-content-flex-row">
-                                        <NewTaskModal />
-                                        <ManageLabelsModal />
-                                    </Row>
+                                        <Row className="justify-content-flex-row">
+                                            <NewTaskModal />
+                                            <ManageLabelsModal />
+                                        </Row>
                                 </Card>
                             </Card>
                             <Card>
                                 <h3>completed tasks</h3>
-                                    {project.tasks && project.tasks.length > 0 ? (
-                                        <>
-                                            <ScrollLinkedTasks data={project.tasks.filter((tasks: { status: string; }) => tasks.status === "completed")}>
-                                            </ScrollLinkedTasks>
-                                        </>) : (<>No projects found</>)}
                                 {/* {map project.tasks if status==completed} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
                                 <TaskDetailModal />
                             </Card>
                             <Card>
                                 <h3>scrapped tasks</h3>
-                                    {project.tasks && project.tasks.length > 0 ? (
-                                        <>
-                                            <ScrollLinkedTasks data={project.tasks.filter((tasks: { status: string; }) => tasks.status === "scrapped")}>
-                                            </ScrollLinkedTasks>
-                                        </>) : (<>No projects found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
                                 <TaskDetailModal />
