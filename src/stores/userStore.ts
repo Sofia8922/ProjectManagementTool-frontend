@@ -3,6 +3,11 @@ import type { AccountLoginReturnDTO } from "../types/Account";
 
 // De momentele gebruiker, lekker hoog in App zodat ie overal berijkbaar is
 export const [useUser, updateUser] = createStore<AccountLoginReturnDTO>({
-    id: NaN,
+    id: 0,
     name: "",
-});
+})
+
+export const logout = () => {
+    location.replace("/")
+    updateUser({id: NaN, name: ""})
+}

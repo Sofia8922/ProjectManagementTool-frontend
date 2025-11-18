@@ -3,7 +3,8 @@ import CustomModal from "./CustomModal"
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { API_URL } from "../App";
-import type { AccountCreationDTO, RoleEnums } from "../Types/models";
+import type { AccountCreationDTO, RoleEnums } from "../types/models";
+import { useUser } from "../stores/userStore";
 
 interface CreationData{
     name:string,
@@ -18,10 +19,11 @@ const CreateNewAccountModal = () => {
 
     const [showCreateNewAccountModal, setShowCreateNewAccountModal] = useState(false);
     const [formData, setFormData] = useState<CreationData>({ name: '', email: '', role: 'OWNER', password: ''})
+    const user = useUser();
 
     const createUser = useMutation({
         mutationFn: async (creationData: AccountCreationDTO) => {
-            const response = await fetch(`${API_URL}/accounts`,
+            const response = await fetch(`${API_URL}/${user.id}/accounts`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

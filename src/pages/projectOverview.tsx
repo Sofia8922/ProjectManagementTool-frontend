@@ -6,33 +6,47 @@ import { useState } from "react";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
 import ScrollLinkedProjects from "../Components/HorizontalScrollBarProjects";
+import type { ProjectShortDTO } from "../types/Project";
+import { logout, useUser } from "../stores/userStore";
+import { useNavigate } from "react-router";
+import { updateProjectId, useProjectId } from "../stores/projectIdStore";
+import ProgressCalculator from "../Components/ProgressCalculator";
+import { Fragment } from "react/jsx-runtime";
 
 const ProjectOverview = () => {
-
     const [projectId, setProjectId] = useState<number>(NaN);
-    const user = useUser();
-    console.log(user.name)
-        ; const {
-            data: account,
-            isLoading,
-            error
-        } = useQuery({
-            queryKey: ["account"],
-            queryFn: async () => {
-                const response = await fetch(`${API_URL}/accounts/1`);
-                if (!response.ok) {
-                    throw new Error("account error")
-                }
-                return response.json();
-            },
-        })
 
-    if (isLoading) {
-        return <p>loading</p>
+    //const [projectId, setProjectId] = useState<number>(NaN);
+    const user = useUser();
+    const projectId = useProjectId();
+    const navigate = useNavigate();
+    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    //add type to useQuery --> useQuerry<AccountDTO>
+    const {
+        data: account,
+        isLoading: isAccountLoading,
+        error: accountError
+    } = useQuery({
+        queryKey: ["account"],
+        queryFn: async () => {
+            const response = await fetch(`${API_URL}/${user.id}/accounts/${user.id}`);
+            if (!response.ok) {
+                throw new Error("account error")
+            }
+            return response.json();
+        },
+    })
+
+    if (isAccountLoading) {
+        return <p>account loading</p>
     }
-    if (error) {
-        return <p>error</p>
+    if (accountError) {
+        return <p>account error</p>
     }
+    if (projectId) {
+        navigate("/projectDetails");
+    }
+    console.log(projectId)
 
     console.log(account.madeProjects)
 
@@ -49,8 +63,7 @@ const ProjectOverview = () => {
                     </h2>
                     <Col>
                         <h4>logged in as:</h4> {account.name}
-                        {/* set account store to null */}
-                        <button>logout</button>
+                        <button onClick={() => logout()}>logout</button>
                     </Col>
                 </Col>
             </Card>
@@ -61,6 +74,19 @@ const ProjectOverview = () => {
                         <>
                             <ScrollLinkedProjects data={account.madeProjects.filter((project: { scrappedStatus: boolean; }) => project.scrappedStatus === false)}>
                             </ScrollLinkedProjects>
+                        <>                      
+                          {/* <ScrollLinked data={account.madeProjects}> */}
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                <Fragment key={madeProject.id}>
+                                    <li onClick={() => updateProjectId(madeProject.id)
+                                    }>
+                                        <h5>{madeProject.name}</h5>
+                                        <p>{madeProject.description}</p>
+                                        <ProgressCalculator id={madeProject.id}/>
+                                    </li>
+                                </Fragment>
+                            )}
+                        {/* </ScrollLinked> */}
                         </>) : (<>No projects found</>)}
                 </div>
             </Card>
