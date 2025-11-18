@@ -39,7 +39,7 @@ export default function ScrollLinkedTasks({ data }) {
             <motion.ul ref={ref} style={{ maskImage }}>
 
                 {data.map(info =>
-                <Card id="example">
+                <Card id="example2">
                     <li key={info.id} >
                         {info.name}
                         <br/>
@@ -69,7 +69,7 @@ export default function ScrollLinkedTasks({ data }) {
 
 const left = `0%`
 const right = `100%`
-const leftInset = `10%`
+const leftInset = `5%`
 const rightInset = `95%`
 const transparent = `#0000`
 const opaque = `#000`
@@ -109,8 +109,15 @@ function StyleSheet() {
         <style>{`
             #example {
               width: 40vw;
-              max-width: 100%;
+              max-width: 1000%;
               min-width: 20%;
+              position: relative;
+            }
+              
+            #example2 {
+              width: 35vw;
+              max-width: 35%;
+              min-width: 30%;
               position: relative;
             }
 
