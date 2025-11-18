@@ -86,6 +86,7 @@ const ProjectOverview = () => {
                         <>                      
                           {/* <ScrollLinked data={account.madeProjects}> */}
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                // {madeProject.isFinishedStatus !== "COMPLETED" && }
                                 <Fragment key={madeProject.id}>
                                     <li onClick={() => updateProjectId(madeProject.id)
                                     }>
@@ -102,15 +103,43 @@ const ProjectOverview = () => {
             <Card>
                 <div>
                     <h4>Finished projects</h4>
-                    {/* {map Account.projects if status==finished} */}
-                    {/* acount.projects.name + account.projects.description account.projects.progress */}
+                   {account.madeProjects && account.madeProjects.length > 0 ? (
+                        <>                      
+                          {/* <ScrollLinked data={account.madeProjects}> */}
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                // {madeProject.isFinishedStatus === "COMPLETED" && }
+                                <Fragment key={madeProject.id}>
+                                    <li onClick={() => updateProjectId(madeProject.id)
+                                    }>
+                                        <h5>{madeProject.name}</h5>
+                                        <p>{madeProject.description}</p>
+                                        <ProgressCalculator id={madeProject.id}/>
+                                    </li>
+                                </Fragment>
+                            )}
+                        {/* </ScrollLinked> */}
+                        </>) : (<>No projects found</>)}
                 </div>
             </Card>
             <Card>
                 <div>
                     <h4>Scrapped projects</h4>
-                    {/* {map Account.projects if status==scrapped} */}
-                    {/* acount.projects.name + account.projects.description account.projects.progress */}
+                    {account.madeProjects && account.madeProjects.length > 0 ? (
+                        <>                      
+                          {/* <ScrollLinked data={account.madeProjects}> */}
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                // {madeProject.isFinishedStatus === "SCRAPPED" && }
+                                <Fragment key={madeProject.id}>
+                                    <li onClick={() => updateProjectId(madeProject.id)
+                                    }>
+                                        <h5>{madeProject.name}</h5>
+                                        <p>{madeProject.description}</p>
+                                        <ProgressCalculator id={madeProject.id}/>
+                                    </li>
+                                </Fragment>
+                            )}
+                        {/* </ScrollLinked> */}
+                        </>) : (<>No projects found</>)}
                 </div>
             </Card>
         </>
