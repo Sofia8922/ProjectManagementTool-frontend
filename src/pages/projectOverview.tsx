@@ -18,7 +18,7 @@ const ProjectOverview = () => {
     const user = useUser();
     const projectId = useProjectId();
     const navigate = useNavigate();
-    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)
     //add type to useQuery --> useQuerry<AccountDTO>
     const {
         data: account,
@@ -72,20 +72,21 @@ const ProjectOverview = () => {
                         <>
                             <ScrollLinkedProjects data={account.madeProjects.filter((project: { scrappedStatus: boolean; }) => project.scrappedStatus === false)}>
                             </ScrollLinkedProjects>
-                                              
-                          {/* <ScrollLinked data={account.madeProjects}> */}
+
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
-                                // {madeProject.finishedStatus !== "COMPLETED" && }
                                 <Fragment key={madeProject.id}>
-                                    <li onClick={() => updateProjectId(madeProject.id)
-                                    }>
-                                        <h5>{madeProject.name}</h5>
-                                        <p>{madeProject.description}</p>
-                                        <ProgressCalculator id={madeProject.id}/>
-                                    </li>
+                                    {
+                                        madeProject.finishedStatus === false || true &&
+                                        <li onClick={() => updateProjectId(madeProject.id)
+                                        }>
+                                            <h5>{madeProject.name}</h5>
+                                            <p>{madeProject.description}</p>
+                                            <ProgressCalculator id={madeProject.id} />
+                                        </li>
+                                    }
                                 </Fragment>
+
                             )}
-                        {/* </ScrollLinked> */}
                         </>) : (<>No projects found</>)}
                 </div>
             </Card>
@@ -104,7 +105,7 @@ const ProjectOverview = () => {
             <Card>
                 <div>
                     <h4>Scrapped projects</h4>
-                                        {account.madeProjects && account.madeProjects.length > 0 ? (
+                    {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
                             <ScrollLinkedProjects data={account.madeProjects.filter((project: { scrappedStatus: boolean; }) => project.scrappedStatus === true)}>
                             </ScrollLinkedProjects>
