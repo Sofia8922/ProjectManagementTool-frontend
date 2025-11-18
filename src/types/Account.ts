@@ -8,7 +8,7 @@ export interface AccountCreateDTO {
     password: string;
     role: string
 }
-  
+
 export interface AccountDTO {
     id: number;
     email: string;
