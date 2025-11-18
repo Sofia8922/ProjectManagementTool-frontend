@@ -65,7 +65,7 @@ const ProjectOverview = () => {
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.scrappedStatus === false)}>
+                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.finishedStatus === false && project.scrappedStatus === false)}>
                             </ScrollLinkedProjects>
                         </>) : (<>No projects found</>)}
                 </div>
@@ -75,7 +75,7 @@ const ProjectOverview = () => {
                     <h4>Finished projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.scrappedStatus === false)}>
+                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.finishedStatus === true && project.scrappedStatus === false )}>
                             </ScrollLinkedProjects>
                         </>) : (<>No projects found</>)}
                     {/* {map Account.projects if status==finished} */}
