@@ -1,4 +1,3 @@
-// import account store
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
@@ -8,11 +7,8 @@ import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import ProgressCalculator from "../Components/ProgressCalculator";
-// import ScrollLinked from "../Components/HorizontalScrollBar";
-// import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import { Fragment } from "react/jsx-runtime";
-// import type { ProjectShortDTO } from "../Types/Project";
-// import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
+import ScrollLinkedProjects from "../Components/HorizontalScrollBarProjects";
 
 const ProjectOverview = () => {
 
@@ -20,7 +16,7 @@ const ProjectOverview = () => {
     const user = useUser();
     const projectId = useProjectId();
     const navigate = useNavigate();
-    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)
     //add type to useQuery --> useQuerry<AccountDTO>
     const {
         data: account,
@@ -50,19 +46,6 @@ const ProjectOverview = () => {
 
     console.log(account.madeProjects)
 
-    // console.log(typeof( account.madeProjects ))
-
-    // const accountArray = Object.entries(account.madeProjects)
-
-    // console.log(typeof(accountArray))
-    // const accountsArray2 = Object.entries(accountArray)
-
-    // console.log(typeof(accountsArray2))
-    //     let data: any = [1, 2, 3];
-    // let numbers: number[] = data as number[];
-
-    // const accountsArray : ProjectShortDTO[] = account.madeProjects as ProjectShortDTO[]
-
     return (
         <>
             <Card>
@@ -84,25 +67,20 @@ const ProjectOverview = () => {
                 <div>
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
-                        <>                      
-                          {/* <ScrollLinked data={account.madeProjects}> */}
-                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
-                                <Fragment key={madeProject.id}>
-                                    <li onClick={() => updateProjectId(madeProject.id)
-                                    }>
-                                        <h5>{madeProject.name}</h5>
-                                        <p>{madeProject.description}</p>
-                                        <ProgressCalculator id={madeProject.id}/>
-                                    </li>
-                                </Fragment>
-                            )}
-                        {/* </ScrollLinked> */}
+                        <>
+                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.scrappedStatus === false)}>
+                            </ScrollLinkedProjects>
                         </>) : (<>No projects found</>)}
                 </div>
             </Card>
             <Card>
                 <div>
                     <h4>Finished projects</h4>
+                    {account.madeProjects && account.madeProjects.length > 0 ? (
+                        <>
+                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.scrappedStatus === false)}>
+                            </ScrollLinkedProjects>
+                        </>) : (<>No projects found</>)}
                     {/* {map Account.projects if status==finished} */}
                     {/* acount.projects.name + account.projects.description account.projects.progress */}
                 </div>
@@ -110,6 +88,11 @@ const ProjectOverview = () => {
             <Card>
                 <div>
                     <h4>Scrapped projects</h4>
+                    {account.madeProjects && account.madeProjects.length > 0 ? (
+                        <>
+                            <ScrollLinkedProjects data={account.madeProjects.filter(project => project.scrappedStatus === true)}>
+                            </ScrollLinkedProjects>
+                        </>) : (<>No projects found</>)}
                     {/* {map Account.projects if status==scrapped} */}
                     {/* acount.projects.name + account.projects.description account.projects.progress */}
                 </div>
