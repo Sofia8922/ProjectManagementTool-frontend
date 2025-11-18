@@ -20,7 +20,7 @@ export interface ProjectDTO {
   developers: AccountShortDTO;
   customers: AccountShortDTO;
 }
-
+ 
 export interface ProjectEditDTO {
   name: string;
   description: string;
