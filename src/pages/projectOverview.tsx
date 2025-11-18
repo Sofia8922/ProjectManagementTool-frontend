@@ -1,21 +1,36 @@
 // import account store
-
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
-import { Fragment } from "react/jsx-runtime";
+ import { Fragment } from "react/jsx-runtime";
 import type { ProjectShortDTO } from "../types/Project";
+import { API_URL } from "../App";
+import { logout, useUser } from "../stores/userStore";
+import { useNavigate } from "react-router";
+import { updateProjectId, useProjectId } from "../stores/projectIdStore";
+import ProgressCalculator from "../Components/ProgressCalculator";
+import ScrollLinked from "../Components/HorizontalScrollBar";
+// import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
+import { Fragment } from "react/jsx-runtime";
+// import type { ProjectShortDTO } from "../Types/Project";
+// import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
 
 const ProjectOverview = () => {
 
+    //const [projectId, setProjectId] = useState<number>(NaN);
+    const user = useUser();
+    const projectId = useProjectId();
+    const navigate = useNavigate();
+    console.log("wat zit er in de store op Overview, id: " + user.id + ", name: " + user.name)    
+    //add type to useQuery --> useQuerry<AccountDTO>
     const {
         data: account,
-        isLoading,
-        error
+        isLoading: isAccountLoading,
+        error: accountError
     } = useQuery({
         queryKey: ["account"],
         queryFn: async () => {
-            const response = await fetch(`http://localhost:8080/accounts/1`);
+            const response = await fetch(`${API_URL}/${user.id}/accounts/${user.id}`);
             if (!response.ok) {
                 throw new Error("account error")
             }
@@ -23,14 +38,31 @@ const ProjectOverview = () => {
         },
     })
 
-    if (isLoading) {
-        return <p>loading</p>
+    if (isAccountLoading) {
+        return <p>account loading</p>
     }
-    if (error) {
-        return <p>error</p>
+    if (accountError) {
+        return <p>account error</p>
     }
+    if (projectId) {
+        navigate("/projectDetails");
+    }
+    console.log(projectId)
 
-    console.log(account)
+    console.log(account.madeProjects)
+
+    // console.log(typeof( account.madeProjects ))
+
+    // const accountArray = Object.entries(account.madeProjects)
+
+    // console.log(typeof(accountArray))
+    // const accountsArray2 = Object.entries(accountArray)
+
+    // console.log(typeof(accountsArray2))
+    //     let data: any = [1, 2, 3];
+    // let numbers: number[] = data as number[];
+
+    // const accountsArray : ProjectShortDTO[] = account.madeProjects as ProjectShortDTO[]
 
     return (
         <>
@@ -45,8 +77,7 @@ const ProjectOverview = () => {
                     </h2>
                     <Col>
                         <h4>logged in as:</h4> {account.name}
-                        {/* set account store to null */}
-                        <button>logout</button>
+                        <button onClick={() => logout()}>logout</button>
                     </Col>
                 </Col>
             </Card>
@@ -54,18 +85,20 @@ const ProjectOverview = () => {
                 <div>
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
-                        <>
+                        <>                      
+                          {/* <ScrollLinked data={account.madeProjects}> */}
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
-                                    <li>
+                                    <li onClick={() => updateProjectId(madeProject.id)
+                                    }>
                                         <h5>{madeProject.name}</h5>
                                         <p>{madeProject.description}</p>
+                                        <ProgressCalculator id={madeProject.id}/>
                                     </li>
                                 </Fragment>
                             )}
+                        {/* </ScrollLinked> */}
                         </>) : (<>No projects found</>)}
-                    {/* {map Account.projects if status==ongoing} + onclick setProjectId*/}
-                    {/* acount.projects.name + account.projects.description account.projects.progress */}
                 </div>
             </Card>
             <Card>

@@ -3,20 +3,29 @@ import EditProjectModal from "../Components/EditProjectModal";
 import ManageLabelsModal from "../Components/ManageLabelsModal";
 import NewTaskModal from "../Components/NewTaskModal";
 import TaskDetailModal from "../Components/TaskDetailModal";
+import { updateProjectId, useProjectId } from "../stores/projectIdStore";
+import { useNavigate } from "react-router";
+import { logout } from "../stores/userStore";
 
 const ProjectDetail = () => {
     // get projectById
+    const projectId = useProjectId();
+    const navigate = useNavigate();
+    console.log("id: " + projectId)
 
+    if (!projectId) {
+        navigate("/projectOverview")
+    }
     return (
         <Container fluid>
             <Row>
                 <Col>
                     <Card>
                         <Col>
-                            <button>project overview</button>
+                            <button onClick={() => updateProjectId(NaN)}>project overview</button>
                         </Col>
                         <Col>
-                            <h1>Project Detail page</h1>
+                            <h1>Project Detail page {projectId}</h1>
                         </Col>
                     </Card>
                 </Col>
@@ -72,7 +81,7 @@ const ProjectDetail = () => {
                         <div>
                             <h4>logged in as:</h4> {/* {Account.name} */}
                             {/* set account store to null */}
-                            <button>logout</button>
+                            <button onClick={() => logout()}>logout</button>
                             <h4>project owner</h4>
 
                             <div>

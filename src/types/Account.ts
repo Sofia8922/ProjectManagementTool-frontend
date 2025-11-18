@@ -6,14 +6,14 @@ export interface AccountCreateDTO {
     email: string;
     name: string;
     password: string;
-    UserRole: string
+    role: string
 }
 
 export interface AccountDTO {
     id: number;
     email: string;
     name: string;
-    UserRole: string;
+    role: string;
     madeComments: CommentShortDTO[];
     madeTasks: TaskShortDTO[];
     madeProjects: ProjectShortDTO[];
@@ -38,5 +38,5 @@ export interface  AccountShortDTO {
   id: number;
   email: string;
   name: string;
-  UserRole: string;
+  role: string;
 }
