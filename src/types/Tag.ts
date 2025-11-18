@@ -9,7 +9,7 @@ export interface TagDTO {
   name: string;
   colour: string;
 }
-
+ 
 export interface TagEditDTO {
   name: string;
   colour: string | null;

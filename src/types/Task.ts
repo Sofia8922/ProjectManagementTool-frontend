@@ -9,7 +9,7 @@ export interface TaskCreateDTO {
   creatorId: number;
   projectId: number;
 }
-
+ 
 export interface TaskDTO {
   id: number;
   name: string;
