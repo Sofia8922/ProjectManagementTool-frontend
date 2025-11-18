@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
 import type { TaskShortDTO } from "../types/Task";
-<<<<<<< HEAD
-=======
 import { useUser } from "../stores/userStore";
->>>>>>> 9011c3f4e5a6e7629634b6dfe0824695c51fb043
 
 interface ProgressCalculatorProps {
     id: number
@@ -12,10 +9,7 @@ interface ProgressCalculatorProps {
 
 const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
 
-<<<<<<< HEAD
-=======
     const user = useUser();
->>>>>>> 9011c3f4e5a6e7629634b6dfe0824695c51fb043
     const {
         data: project,
         isLoading,
@@ -23,11 +17,7 @@ const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
     } = useQuery({
         queryKey: ["project", id],
         queryFn: async () => {
-<<<<<<< HEAD
-            const response = await fetch(`${API_URL}/projects/${id}`);
-=======
             const response = await fetch(`${API_URL}/${user.id}/projects/${id}`);
->>>>>>> 9011c3f4e5a6e7629634b6dfe0824695c51fb043
             if (!response.ok) {
                 throw new Error("projects error")
             }
