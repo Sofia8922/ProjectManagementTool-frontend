@@ -8,9 +8,9 @@ interface ProgressCalculatorProps {
 }
 
 const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
-    
+
     const user = useUser();
-    
+
     const {
         data: project,
         isLoading,
