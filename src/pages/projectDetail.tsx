@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 import { logout, useUser } from "../stores/userStore";
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
+import ScrollLinkedTasks from "../Components/HorizontalScrollBarTasks";
 
 const ProjectDetail = () => {
     // get projectById
@@ -78,9 +79,13 @@ const ProjectDetail = () => {
                             <Card>
                                 <Card>
                                     <h3>ongoing tasks</h3>
+                                    {project.tasks && project.tasks.length > 0 ? (
+                                        <>
+                                            <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== "COMPLETED" && task.status !== "SCRAPPED")}>
+                                            </ScrollLinkedTasks>
+                                        </>) : (<>No tasks found</>)}
                                     {/* {map project.tasks if status==ongoing} + onclick setTaskId*/}
                                     {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                    <TaskDetailModal />
                                 </Card>
                                 <Card>
                                     <Row className="justify-content-flex-row">
@@ -91,12 +96,21 @@ const ProjectDetail = () => {
                             </Card>
                             <Card>
                                 <h3>completed tasks</h3>
+                                    {project.tasks && project.tasks.length > 0 ? (
+                                        <>
+                                            <ScrollLinkedTasks data={project.tasks.filter(task => task.status === "COMPLETED" && task.status !== "SCRAPPED")}>
+                                            </ScrollLinkedTasks>
+                                        </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==completed} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                <TaskDetailModal />
                             </Card>
                             <Card>
                                 <h3>scrapped tasks</h3>
+                                    {project.tasks && project.tasks.length > 0 ? (
+                                        <>
+                                            <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== "COMPLETED" && task.status === "SCRAPPED")}>
+                                            </ScrollLinkedTasks>
+                                        </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
                                 <TaskDetailModal />

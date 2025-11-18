@@ -36,10 +36,10 @@ export interface TaskShortDTO {
 }
 
 export enum status {
-Pending,
-InProgress,
-OnHold,
-UnderReview,
-Completed,
-Scrapped
+PENDING,
+INPROGRESS,
+ONHOLD,
+UNDERREVIEW,
+COMPLETED,
+SCRAPPED
 }
