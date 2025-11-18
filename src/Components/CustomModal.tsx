@@ -36,7 +36,7 @@ const CustomModal = ({ title, children, handleSubmit, show , setShow }: modalPro
                     </Button>
                     <Button as="input" variant="primary" value="Confirm" onClick={() => { 
                                  handleSubmit()
-                                 setShow(false)
+                                 // setShow() Patrick: Do not close the modal if the changes didn't go through
                                  }} />
                 </Modal.Footer>
             </Modal>
