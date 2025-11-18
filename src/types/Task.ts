@@ -25,14 +25,14 @@ export interface TaskDTO {
 export interface TaskEditDTO {
   name: string;
   content: string;
-  status: string;
+  status: status;
 }
 
 export interface TaskShortDTO {
     id: number;
     name: string;
     content: string;
-    status: string;
+    status: status;
 }
 
 export enum status {
