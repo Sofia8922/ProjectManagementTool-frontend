@@ -50,6 +50,19 @@ const ProjectOverview = () => {
 
     console.log(account.madeProjects)
 
+    // console.log(typeof( account.madeProjects ))
+
+    // const accountArray = Object.entries(account.madeProjects)
+
+    // console.log(typeof(accountArray))
+    // const accountsArray2 = Object.entries(accountArray)
+
+    // console.log(typeof(accountsArray2))
+    //     let data: any = [1, 2, 3];
+    // let numbers: number[] = data as number[];
+
+    // const accountsArray : ProjectShortDTO[] = account.madeProjects as ProjectShortDTO[]
+
     return (
         <>
             <Card>
