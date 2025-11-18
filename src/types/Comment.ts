@@ -6,7 +6,7 @@ export interface CommentCreateDTO {
   authorId: number;
   taskId: number;
 }
-
+  
 export interface CommentDTO {
   id: number;
   content: string;
