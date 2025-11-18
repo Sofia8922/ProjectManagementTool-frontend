@@ -1,13 +1,10 @@
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
-import type { ProjectShortDTO } from "../types/Project";
 import { API_URL } from "../App";
 import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
-import { updateProjectId, useProjectId } from "../stores/projectIdStore";
-import ProgressCalculator from "../Components/ProgressCalculator";
-import { Fragment } from "react/jsx-runtime";
+import { useProjectId } from "../stores/projectIdStore";
 import ScrollLinkedProjects from "../Components/HorizontalScrollBarProjects";
 
 const ProjectOverview = () => {
