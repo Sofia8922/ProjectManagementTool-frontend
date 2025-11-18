@@ -25,7 +25,7 @@ export interface ProjectEditDTO {
   name: string;
   description: string;
 }
-
+ 
 export interface ProjectShortDTO {
   id: number;
   name: string;

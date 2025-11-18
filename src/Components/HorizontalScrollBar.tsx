@@ -9,25 +9,14 @@ import {
 import { useRef } from "react"
 import { Card } from "react-bootstrap"
 
-export default function ScrollLinkedProjects({ data }) {
+export default function ScrollLinked({ data }) {
     const ref = useRef(null)
     const { scrollXProgress } = useScroll({ container: ref })
     const maskImage = useScrollOverflowMask(scrollXProgress)
 
-    if (data.length == 0) {
-        return (
-            <motion.ul ref={ref} style={{ maskImage }}>
-                <Card>
-                    no data available
-                </Card>
-            </motion.ul>
-        )
-    }
-
-
     return (
         <div id="example">
-            {/* <svg id="progress" width="80" height="80" viewBox="0 0 100 100">
+            <svg id="progress" width="80" height="80" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
                 <motion.circle
                     cx="50"
@@ -36,18 +25,18 @@ export default function ScrollLinkedProjects({ data }) {
                     className="indicator"
                     style={{ pathLength: scrollXProgress }}
                 />
-            </svg> */}
+            </svg>
             <motion.ul ref={ref} style={{ maskImage }}>
 
                 {data.map(info =>
-                    <Card id="example">
-                        <li key={info.id}>
-                            {info.name}
-                            <br />
-                            {info.description}
-                            <br />
-                            {info.scrappedStatus}
-                        </li>
+                <Card id="example">
+                    <li key={info.id}>
+                        {info.name}
+                        <br/>
+                        {info.description}
+                        <br/>
+                        {info.scrappedStatus}
+                    </li>
                     </Card>
                 )}
             </motion.ul>
@@ -58,7 +47,7 @@ export default function ScrollLinkedProjects({ data }) {
 
 const left = `0%`
 const right = `100%`
-const leftInset = `5%`
+const leftInset = `10%`
 const rightInset = `95%`
 const transparent = `#0000`
 const opaque = `#000`
@@ -128,9 +117,6 @@ function StyleSheet() {
                 display: flex;
                 list-style: none;
                 height: 280px;
-                width: 40vw;
-                // max-width: 100%;
-                // min-width: 20%;
                 overflow-x: scroll;
                 padding: 10px 0;
                 flex: 0 0 600px;

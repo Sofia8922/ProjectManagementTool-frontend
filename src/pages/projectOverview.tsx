@@ -2,9 +2,8 @@
 import { Card, Col } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import NewProjectModal from "../Components/NewProjectModal";
-import { API_URL } from "../App";
-import ScrollLinkedProjects from "../Components/HorizontalScrollBarProjects";
 import type { ProjectShortDTO } from "../types/Project";
+import { API_URL } from "../App";
 import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
@@ -12,8 +11,11 @@ import ProgressCalculator from "../Components/ProgressCalculator";
 // import ScrollLinked from "../Components/HorizontalScrollBar";
 // import InfiniteScroll from "../Components/InfiniteHorizontalScroll";
 import { Fragment } from "react/jsx-runtime";
+// import type { ProjectShortDTO } from "../Types/Project";
+// import ProjectOverviewComponent from '../Components/ProjectOverviewComponent';
 
 const ProjectOverview = () => {
+
     //const [projectId, setProjectId] = useState<number>(NaN);
     const user = useUser();
     const projectId = useProjectId();
@@ -48,6 +50,19 @@ const ProjectOverview = () => {
 
     console.log(account.madeProjects)
 
+    // console.log(typeof( account.madeProjects ))
+
+    // const accountArray = Object.entries(account.madeProjects)
+
+    // console.log(typeof(accountArray))
+    // const accountsArray2 = Object.entries(accountArray)
+
+    // console.log(typeof(accountsArray2))
+    //     let data: any = [1, 2, 3];
+    // let numbers: number[] = data as number[];
+
+    // const accountsArray : ProjectShortDTO[] = account.madeProjects as ProjectShortDTO[]
+
     return (
         <>
             <Card>
@@ -70,13 +85,11 @@ const ProjectOverview = () => {
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            <ScrollLinkedProjects data={account.madeProjects.filter((project: { scrappedStatus: boolean; }) => project.scrappedStatus === false)}>
-                            </ScrollLinkedProjects>
-
+                            {/* <ScrollLinked data={account.madeProjects}> */}
                             {account.madeProjects.map((madeProject: ProjectShortDTO) =>
                                 <Fragment key={madeProject.id}>
                                     {
-                                        madeProject.finishedStatus === false || true &&
+
                                         <li onClick={() => updateProjectId(madeProject.id)
                                         }>
                                             <h5>{madeProject.name}</h5>
@@ -93,13 +106,24 @@ const ProjectOverview = () => {
             <Card>
                 <div>
                     <h4>Finished projects</h4>
-                    {/* {account.madeProjects && account.madeProjects.length > 0 ? (
+                    {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            <ScrollLinked data={account.madeProjects.filter(project => project.scrappedStatus === false)}>
-                            </ScrollLinked>
-                        </>) : (<>No projects found</>)} */}
-                    {/* {map Account.projects if status==finished} */}
-                    {/* acount.projects.name + account.projects.description account.projects.progress */}
+                            {/* <ScrollLinked data={account.madeProjects}> */}
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                <Fragment key={madeProject.id}>
+                                    {
+
+                                        <li onClick={() => updateProjectId(madeProject.id)
+                                        }>
+                                            <h5>{madeProject.name}</h5>
+                                            <p>{madeProject.description}</p>
+                                            <ProgressCalculator id={madeProject.id} />
+                                        </li>
+                                    }
+                                </Fragment>
+
+                            )}
+                        </>) : (<>No projects found</>)}
                 </div>
             </Card>
             <Card>
@@ -107,11 +131,22 @@ const ProjectOverview = () => {
                     <h4>Scrapped projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
-                            <ScrollLinkedProjects data={account.madeProjects.filter((project: { scrappedStatus: boolean; }) => project.scrappedStatus === true)}>
-                            </ScrollLinkedProjects>
+                            {/* <ScrollLinked data={account.madeProjects}> */}
+                            {account.madeProjects.map((madeProject: ProjectShortDTO) =>
+                                <Fragment key={madeProject.id}>
+                                    {
+
+                                        <li onClick={() => updateProjectId(madeProject.id)
+                                        }>
+                                            <h5>{madeProject.name}</h5>
+                                            <p>{madeProject.description}</p>
+                                            <ProgressCalculator id={madeProject.id} />
+                                        </li>
+                                    }
+                                </Fragment>
+
+                            )}
                         </>) : (<>No projects found</>)}
-                    {/* {map Account.projects if status==scrapped} */}
-                    {/* acount.projects.name + account.projects.description account.projects.progress */}
                 </div>
             </Card>
         </>
