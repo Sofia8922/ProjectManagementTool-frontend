@@ -19,7 +19,6 @@ const CreateNewAccountModal = () => {
 
     const [showCreateNewAccountModal, setShowCreateNewAccountModal] = useState(false);
     const [formData, setFormData] = useState<CreationData>({ name: '', email: '', role: 'OWNER', password: ''})
-    const [errorMessage, setErrorMessage] = useState('')
     const user = useUser();
 
     const createUser = useMutation({
@@ -35,18 +34,13 @@ const CreateNewAccountModal = () => {
             return response.json();
         },
         onSuccess: (response) => {
-            if (response.message!==undefined) {            
-            setErrorMessage(response.message)
-            } else {
             console.log(response)
             setFormData({ name: '', email: '', role: 'OWNER', password: ''})
-            setErrorMessage('')
+            // invalidate queries here later
             setShowCreateNewAccountModal(false)
-            }
         },
-        onError: (response : any) => {
+        onError: () => {
             console.log("Er ging iets fout.")
-            if (response.message!==undefined) setErrorMessage(response.message)
         }
     })
 
@@ -72,7 +66,6 @@ const CreateNewAccountModal = () => {
                 <form>
                     <fieldset>
                         <div>
-                            {errorMessage && (<p style={{color:'red'}} className="error">{errorMessage}</p>)}
                             <label htmlFor="username"> Name: </label>
                             <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
                         </div>
