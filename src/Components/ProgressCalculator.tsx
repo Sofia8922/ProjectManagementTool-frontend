@@ -1,15 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
 import type { TaskShortDTO } from "../types/Task";
-import { useUser } from "../stores/userStore";
 
 interface ProgressCalculatorProps {
     id: number
 }
 
 const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
-
-    const user = useUser();
 
     const {
         data: project,
@@ -18,7 +15,7 @@ const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
     } = useQuery({
         queryKey: ["project", id],
         queryFn: async () => {
-            const response = await fetch(`${API_URL}/${user.id}/projects/${id}`);
+            const response = await fetch(`${API_URL}/projects/${id}`);
             if (!response.ok) {
                 throw new Error("projects error")
             }
