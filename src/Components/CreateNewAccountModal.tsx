@@ -19,6 +19,7 @@ const CreateNewAccountModal = () => {
 
     const [showCreateNewAccountModal, setShowCreateNewAccountModal] = useState(false);
     const [formData, setFormData] = useState<CreationData>({ name: '', email: '', role: 'OWNER', password: ''})
+    const [errorMessage, setErrorMessage] = useState('')
     const user = useUser();
 
     const createUser = useMutation({
@@ -34,13 +35,17 @@ const CreateNewAccountModal = () => {
             return response.json();
         },
         onSuccess: (response) => {
+            if (response.message!==undefined) {
+                setErrorMessage(response.message)
+            } else {
             console.log(response)
             setFormData({ name: '', email: '', role: 'OWNER', password: ''})
             // invalidate queries here later
             setShowCreateNewAccountModal(false)
+            }
         },
         onError: () => {
-            console.log("Er ging iets fout.")
+            console.log("Something went wrong.")
         }
     })
 
@@ -49,7 +54,7 @@ const CreateNewAccountModal = () => {
         console.log("handled submit create new account")
         createUser.mutate(formData)
         console.log(formData)
-        } else { console.log("Email invalid!")}
+        } else { setErrorMessage("Email address invalid!")}
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
@@ -66,6 +71,7 @@ const CreateNewAccountModal = () => {
                 <form>
                     <fieldset>
                         <div>
+                            {errorMessage && (<p style={{color:'red'}} className="error">{errorMessage}</p>)}
                             <label htmlFor="username"> Name: </label>
                             <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} />
                         </div>

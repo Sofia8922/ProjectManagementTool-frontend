@@ -34,6 +34,9 @@ const ProjectOverview = () => {
         return <p>account loading</p>
     }
     if (accountError) {
+        if (user.name === "" && Number.isNaN(user.id)){
+            navigate("/");
+        }
         return <p>account error</p>
     }
     if (projectId) {

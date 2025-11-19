@@ -31,12 +31,12 @@ const CustomModal = ({ title, children, handleSubmit, show , setShow }: modalPro
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button as="input" variant="secondary" value="Close" onClick={()=>setShow(false)}>
+                    <Button as="input" variant="secondary" value="Return" onClick={()=>setShow(false)}>
                         
                     </Button>
                     <Button as="input" variant="primary" value="Confirm" onClick={() => { 
                                  handleSubmit()
-                                 setShow(false)
+                                 // setShow(false) Patrick: Do not hide automatically, wait until there's no errors
                                  }} />
                 </Modal.Footer>
             </Modal>
