@@ -33,7 +33,8 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
             onSuccess: (response) => {
                 if(response.name!==undefined) {
                     console.log(response)
-                queryClient.invalidateQueries();
+                queryClient.invalidateQueries({queryKey:["task"]})
+                queryClient.invalidateQueries({queryKey: ["project"]})
                 setTaskEditData({...taskEditData, name: '', content:''})
                 setShowEditTaskModal(false)                
              } else if (response.message!==undefined) {
