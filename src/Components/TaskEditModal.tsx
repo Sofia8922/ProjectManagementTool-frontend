@@ -81,9 +81,9 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
                             <label htmlFor="status"> Role: </label>
                             <select id="status" name="status" value={taskEditData.status} onChange={handleChange}>
                                 <option value="PENDING">Pending</option>
-                                <option value="INPROGRESS">In Progress</option>
-                                <option value="ONHOLD">On Hold</option>
-                                <option value="UNDERREVIEW">Under Review</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="ON_HOLD">On Hold</option>
+                                <option value="UNDER_REVIEW">Under Review</option>
                                 <option value="COMPLETED">Completed</option>
                                 <option value="SCRAPPED">Scrapped</option>
                             </select>
