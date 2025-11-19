@@ -45,7 +45,7 @@ const CreateNewAccountModal = () => {
             }
         },
         onError: () => {
-            console.log("Er ging iets fout.")
+            console.log("Something went wrong.")
         }
     })
 
