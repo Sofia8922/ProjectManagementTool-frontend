@@ -8,6 +8,7 @@ import {
 } from "motion/react"
 import { useRef } from "react"
 import { Card } from "react-bootstrap"
+import TaskDetailModal from "./TaskDetailModal"
 
 export default function ScrollLinkedTasks({ data }) {
     const ref = useRef(null)
@@ -48,6 +49,7 @@ export default function ScrollLinkedTasks({ data }) {
                         {info.status}
                         <br/>
                         {info.tags}
+                        <TaskDetailModal taskId={info.id}/>
                     </li>
                     </Card>
                 )}
