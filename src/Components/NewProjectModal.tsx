@@ -32,7 +32,7 @@ const NewProjectModal = () => {
             } else {
             console.log(response)
             setFormData({ name: '', description: '', creatorId:user.id})
-            queryClient.invalidateQueries({queryKey: ['account']})
+            queryClient.invalidateQueries({queryKey: ["account"]})
             setShowNewProjectModal(false)
             }
         },
