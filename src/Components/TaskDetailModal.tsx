@@ -9,8 +9,11 @@ import { useNavigate } from "react-router";
 import type { TaskDTO } from "../types/Task";
 import type { AccountDTO } from "../types/Account";
 
+interface TaskDetailModalProps {
+    taskId: number;
+}
 
-const TaskDetailModal = () => {
+const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
 
     const user = useUser();
     const navigate = useNavigate();
@@ -22,7 +25,7 @@ const TaskDetailModal = () => {
 
     const deleteTask = useMutation({
         mutationFn: async () => {
-            const response = await fetch(`${API_URL}/${user.id}/tasks/1`, {
+            const response = await fetch(`${API_URL}/${user.id}/tasks/${taskId}`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -30,7 +33,7 @@ const TaskDetailModal = () => {
             return
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['task'] });
+            queryClient.invalidateQueries({ queryKey: ["task"] });
             console.log("succes")
             setShowTaskDetailModal(false)
         }
@@ -58,7 +61,7 @@ const TaskDetailModal = () => {
     } = useQuery<TaskDTO>({
         queryKey: ["task"],
         queryFn: async () => {
-            const response = await fetch(`${API_URL}/${user.id}/tasks/1`);
+            const response = await fetch(`${API_URL}/${user.id}/tasks/${taskId}`);
             if (!response.ok) {
                 throw new Error("task error")
             }

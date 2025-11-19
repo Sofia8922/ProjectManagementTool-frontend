@@ -2,7 +2,6 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import EditProjectModal from "../Components/EditProjectModal";
 import ManageLabelsModal from "../Components/ManageLabelsModal";
 import NewTaskModal from "../Components/NewTaskModal";
-import TaskDetailModal from "../Components/TaskDetailModal";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import { useNavigate } from "react-router";
 import { logout, useUser } from "../stores/userStore";
@@ -118,7 +117,7 @@ const ProjectDetail = () => {
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                <TaskDetailModal />
+                                {/* <TaskDetailModal /> */}
                             </Card>
                         </Card>
                     </div>
