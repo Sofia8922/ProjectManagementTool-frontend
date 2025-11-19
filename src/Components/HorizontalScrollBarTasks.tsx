@@ -53,7 +53,7 @@ export default function ScrollLinkedTasks({ data }: ScrollLinkedTasksProps) {
                         <br/>
                         {info.status}
                         <br/>
-                        {info.tags}
+                        {/* {info.tags} */}
                         <TaskDetailModal taskId={info.id}/>
                     </li>
                     </Card>
