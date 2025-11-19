@@ -2,16 +2,49 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import EditProjectModal from "../Components/EditProjectModal";
 import ManageLabelsModal from "../Components/ManageLabelsModal";
 import NewTaskModal from "../Components/NewTaskModal";
-import TaskDetailModal from "../Components/TaskDetailModal";
 import { updateProjectId, useProjectId } from "../stores/projectIdStore";
 import { useNavigate } from "react-router";
-import { logout } from "../stores/userStore";
+import { logout, useUser } from "../stores/userStore";
+import { useQuery } from "@tanstack/react-query";
+import { API_URL } from "../App";
+import ScrollLinkedTasks from "../Components/HorizontalScrollBarTasks";
+import ProgressCalculator from "../Components/ProgressCalculator";
+import { status } from "../types/Task";
 
 const ProjectDetail = () => {
     // get projectById
     const projectId = useProjectId();
     const navigate = useNavigate();
-    console.log("id: " + projectId)
+    console.log("id: " + projectId);
+    const user = useUser();
+
+    const {
+        data: project,
+        isLoading: isProjectLoading,
+        error: projectError
+    } = useQuery({
+        queryKey: ["project"],
+        queryFn: async () => {
+            const response = await fetch(`${API_URL}/${user.id}/projects/${projectId}`);
+            if (!response.ok) {
+                throw new Error("project error")
+            }
+            return response.json();
+        },
+    })
+
+    if (isProjectLoading) {
+        return <p>project loading</p>
+    }
+    if (projectError) {
+        if (user.name === "" && Number.isNaN(user.id)) {
+            navigate("/");
+        }
+        return <p>project error</p>
+    }
+    // if (projectId) {
+    //     navigate("/projectDetails");
+    // }
 
     if (!projectId) {
         navigate("/projectOverview")
@@ -25,7 +58,7 @@ const ProjectDetail = () => {
                             <button onClick={() => updateProjectId(NaN)}>project overview</button>
                         </Col>
                         <Col>
-                            <h1>Project Detail page {projectId}</h1>
+                            <h1>Project Detail page</h1>
                         </Col>
                     </Card>
                 </Col>
@@ -34,13 +67,13 @@ const ProjectDetail = () => {
                 <Col>
                     <Card>
                         <div>
-                            <h2>project title</h2>
-                            {/* project.name */}
-                            <h2>Tasks completed</h2>
-                            {/* project.progress */}
+                            project title
+                            <h2>{project.name}</h2>
+                            Tasks completed
+                            <h2><ProgressCalculator id={project.id} /></h2>
                             <EditProjectModal />
-                            <h3>project description</h3>
-                            {/* project.description */}
+                            project description
+                            <h2>{project.description}</h2>
                         </div>
                     </Card>
                     <div>
@@ -50,28 +83,41 @@ const ProjectDetail = () => {
                             <Card>
                                 <Card>
                                     <h3>ongoing tasks</h3>
+                                    {project.tasks && project.tasks.length > 0 ? (
+                                        <>
+                                            <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== status.COMPLETED && task.status !== status.SCRAPPED)}>
+                                            </ScrollLinkedTasks>
+                                        </>) : (<>No tasks found</>)}
                                     {/* {map project.tasks if status==ongoing} + onclick setTaskId*/}
                                     {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                    <TaskDetailModal />
                                 </Card>
                                 <Card>
-                                        <Row className="justify-content-flex-row">
-                                            <NewTaskModal />
-                                            <ManageLabelsModal />
-                                        </Row>
+                                    <Row className="justify-content-flex-row">
+                                        <NewTaskModal />
+                                        <ManageLabelsModal />
+                                    </Row>
                                 </Card>
                             </Card>
                             <Card>
                                 <h3>completed tasks</h3>
+                                {project.tasks && project.tasks.length > 0 ? (
+                                    <>
+                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status === status.COMPLETED && task.status !== status.SCRAPPED)}>
+                                        </ScrollLinkedTasks>
+                                    </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==completed} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                <TaskDetailModal />
                             </Card>
                             <Card>
                                 <h3>scrapped tasks</h3>
+                                {project.tasks && project.tasks.length > 0 ? (
+                                    <>
+                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== status.COMPLETED && task.status === status.SCRAPPED)}>
+                                        </ScrollLinkedTasks>
+                                    </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                <TaskDetailModal />
+                                {/* <TaskDetailModal /> */}
                             </Card>
                         </Card>
                     </div>
@@ -79,17 +125,28 @@ const ProjectDetail = () => {
                 <Col>
                     <Card>
                         <div>
-                            <h4>logged in as:</h4> {/* {Account.name} */}
-                            {/* set account store to null */}
+                            <h4>logged in as:</h4>
+                            <h2>{user.name}</h2>
                             <button onClick={() => logout()}>logout</button>
                             <h4>project owner</h4>
+                            {project.projectCreator.name}
 
                             <div>
                                 <h4>dev team</h4>
+                                {project.developers.map(developer => (
+                                    <li key={developer.id}>
+                                        {developer.name}
+                                    </li>
+                                ))}
                                 {/* {map project.accounts if role==DEVELOPER */}
                             </div>
                             <div>
                                 <h4>customers</h4>
+                                {project.customers.map(customer => (
+                                    <li key={customer.id}>
+                                        {customer.name}
+                                    </li>
+                                ))}
                                 {/* {map project.accounts if role==CUSTOMER */}
                             </div>
                         </div>
