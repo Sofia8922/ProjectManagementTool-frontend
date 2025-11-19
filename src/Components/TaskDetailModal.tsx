@@ -112,7 +112,7 @@ const TaskDetailModal = () => {
                     </Card>
                     <Card>
                         <Row>
-                            <TaskEditModal /> {account.role !== "CUSTOMER" && <button onClick={() => deleteTask.mutate()}>Delete task</button>}
+                            <TaskEditModal taskData={task}/> {account.role !== "CUSTOMER" && <button onClick={() => deleteTask.mutate()}>Delete task</button>}
                         </Row>
                     </Card>
                     <Card>
