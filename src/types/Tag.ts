@@ -3,13 +3,13 @@ export interface TagCreateDTO {
   colour: string;
   projectId: number;
 }
- 
+
 export interface TagDTO {
   id: number;
   name: string;
   colour: string;
 }
- 
+
 export interface TagEditDTO {
   name: string;
   colour: string | null;
