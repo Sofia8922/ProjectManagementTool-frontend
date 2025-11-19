@@ -23,6 +23,7 @@ export interface ProjectDTO {
 export interface ProjectEditDTO {
   name: string;
   description: string;
+  scrappedStatus: boolean;
 }
 
 export interface ProjectShortDTO {
