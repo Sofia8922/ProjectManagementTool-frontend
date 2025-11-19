@@ -14,6 +14,7 @@ export interface ProjectDTO {
   description: string;
   tags: TagDTO[];
   tasks: TaskShortDTO[];
+  finishedStatus: boolean;
   scrappedStatus: boolean;
   projectCreator: AccountShortDTO;
   developers: AccountShortDTO;
@@ -30,5 +31,6 @@ export interface ProjectShortDTO {
   id: number;
   name: string;
   description: string;
+  finishedStatus: boolean;
   scrappedStatus: boolean;
 }
