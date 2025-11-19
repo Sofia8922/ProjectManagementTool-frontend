@@ -9,8 +9,13 @@ import {
 import { useRef } from "react"
 import { Card } from "react-bootstrap"
 import TaskDetailModal from "./TaskDetailModal"
+import type { TaskShortDTO } from "../types/Task"
 
-export default function ScrollLinkedTasks({ data }) {
+interface ScrollLinkedTasksProps {
+    data: TaskShortDTO[]
+}
+
+export default function ScrollLinkedTasks({ data }: ScrollLinkedTasksProps) {
     const ref = useRef(null)
     const { scrollXProgress } = useScroll({ container: ref })
     const maskImage = useScrollOverflowMask(scrollXProgress)
