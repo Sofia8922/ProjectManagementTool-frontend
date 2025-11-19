@@ -8,7 +8,11 @@ import { type TaskEditDTO, type TaskDTO } from "../types/Task";
 
 // taskData is de Task die meegegeven wordt
 
-const TaskEditModal = (taskData : TaskDTO) => {
+interface TaskEditModalProps {
+    taskData: TaskDTO
+}
+
+const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
 
     const user = useUser();
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
@@ -79,8 +83,8 @@ const TaskEditModal = (taskData : TaskDTO) => {
                                 <option value="INPROGRESS">In Progress</option>
                                 <option value="ONHOLD">On Hold</option>
                                 <option value="UNDERREVIEW">Under Review</option>
-                                <option value="COMPLETED">Developer</option>
-                                <option value="SCRAPPED">Customer</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="SCRAPPED">Scrapped</option>
                             </select>
                         </div>
                     </fieldset>

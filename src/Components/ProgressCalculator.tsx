@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
-import type { TaskShortDTO } from "../types/Task";
+import { status, type TaskShortDTO } from "../types/Task";
 import { useUser } from "../stores/userStore";
 
 interface ProgressCalculatorProps {
@@ -37,7 +37,7 @@ const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
         let notCompleted = 0;
 
         project.tasks.forEach((task: TaskShortDTO) => {
-            if (task.status === "COMPLETED") {
+            if (task.status === status.COMPLETED) {
                 completed += 1;
             } else {
                 notCompleted += 1;

@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
 import ScrollLinkedTasks from "../Components/HorizontalScrollBarTasks";
 import ProgressCalculator from "../Components/ProgressCalculator";
+import { status } from "../types/Task";
 
 const ProjectDetail = () => {
     // get projectById
@@ -85,7 +86,7 @@ const ProjectDetail = () => {
                                     <h3>ongoing tasks</h3>
                                     {project.tasks && project.tasks.length > 0 ? (
                                         <>
-                                            <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== "COMPLETED" && task.status !== "SCRAPPED")}>
+                                            <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== status.COMPLETED && task.status !== status.SCRAPPED)}>
                                             </ScrollLinkedTasks>
                                         </>) : (<>No tasks found</>)}
                                     {/* {map project.tasks if status==ongoing} + onclick setTaskId*/}
@@ -102,7 +103,7 @@ const ProjectDetail = () => {
                                 <h3>completed tasks</h3>
                                 {project.tasks && project.tasks.length > 0 ? (
                                     <>
-                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status === "COMPLETED" && task.status !== "SCRAPPED")}>
+                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status === status.COMPLETED && task.status !== status.SCRAPPED)}>
                                         </ScrollLinkedTasks>
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==completed} + onclick setTaskId*/}
@@ -112,7 +113,7 @@ const ProjectDetail = () => {
                                 <h3>scrapped tasks</h3>
                                 {project.tasks && project.tasks.length > 0 ? (
                                     <>
-                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== "COMPLETED" && task.status === "SCRAPPED")}>
+                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status !== status.COMPLETED && task.status === status.SCRAPPED)}>
                                         </ScrollLinkedTasks>
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
