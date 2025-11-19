@@ -17,8 +17,8 @@ export interface ProjectDTO {
   finishedStatus: boolean;
   scrappedStatus: boolean;
   projectCreator: AccountShortDTO;
-  developers: AccountShortDTO;
-  customers: AccountShortDTO;
+  developers: AccountShortDTO[];
+  customers: AccountShortDTO[];
 }
 
 export interface ProjectEditDTO {
