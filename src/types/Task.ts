@@ -14,7 +14,7 @@ export interface TaskDTO {
   id: number;
   name: string;
   content: string;
-  status: string;
+  status: status;
   project: ProjectShortDTO;
   comments: CommentShortDTO[];
   creator: AccountShortDTO;
@@ -25,12 +25,21 @@ export interface TaskDTO {
 export interface TaskEditDTO {
   name: string;
   content: string;
-  status: string;
+  status: status;
 }
 
 export interface TaskShortDTO {
     id: number;
     name: string;
     content: string;
-    status: string;
+    status: status;
+}
+
+export enum status {
+PENDING,
+INPROGRESS,
+ONHOLD,
+UNDERREVIEW,
+COMPLETED,
+SCRAPPED
 }
