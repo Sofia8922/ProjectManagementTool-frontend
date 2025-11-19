@@ -22,6 +22,7 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
     const handleSubmitTaskDetailModal = () => {
         console.log("handled submit")
     };
+    console.log("taskId:" + taskId)
 
     const deleteTask = useMutation({
         mutationFn: async () => {
@@ -34,7 +35,7 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["task"] });
-            console.log("succes")
+            console.log("succesfully deleted task")
             setShowTaskDetailModal(false)
         }
     });
@@ -59,7 +60,7 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
         isLoading: isTaskLoading,
         error: taskError
     } = useQuery<TaskDTO>({
-        queryKey: ["task"],
+        queryKey: ["task", taskId],
         queryFn: async () => {
             const response = await fetch(`${API_URL}/${user.id}/tasks/${taskId}`);
             if (!response.ok) {
