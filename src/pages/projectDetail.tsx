@@ -37,6 +37,9 @@ const ProjectDetail = () => {
         return <p>project loading</p>
     }
     if (projectError) {
+        if (user.name === "" && Number.isNaN(user.id)) {
+            navigate("/");
+        }
         return <p>project error</p>
     }
     // if (projectId) {
@@ -122,11 +125,11 @@ const ProjectDetail = () => {
                 <Col>
                     <Card>
                         <div>
-                            <h4>logged in as:</h4> {/* {Account.name} */}
-                            {/* set account store to null */}
+                            <h4>logged in as:</h4>
+                            <h2>{user.name}</h2>
                             <button onClick={() => logout()}>logout</button>
                             <h4>project owner</h4>
-                                    {project.projectCreator.name}
+                            {project.projectCreator.name}
 
                             <div>
                                 <h4>dev team</h4>
@@ -139,7 +142,7 @@ const ProjectDetail = () => {
                             </div>
                             <div>
                                 <h4>customers</h4>
-                                    {project.customers.map(customer => (
+                                {project.customers.map(customer => (
                                     <li key={customer.id}>
                                         {customer.name}
                                     </li>
