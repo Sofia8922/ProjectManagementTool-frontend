@@ -34,7 +34,8 @@ const NewTaskModal = () => {
             } else {
             console.log(response)
             setFormData({ name: '', content: '', creatorId:user.id, projectId:projectId})
-            queryClient.invalidateQueries({queryKey: ['task']})
+            queryClient.invalidateQueries({queryKey: ["task"]})
+            queryClient.invalidateQueries({queryKey: ["project"]})
             setShowNewProjectModal(false)
             }
         },
