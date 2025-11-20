@@ -21,4 +21,5 @@ export interface CommentEditDTO {
 export interface CommentShortDTO {
   id: number;
   content: string;
+  author: AccountShortDTO;
 }
