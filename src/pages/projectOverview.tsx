@@ -6,6 +6,7 @@ import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { useProjectId } from "../stores/projectIdStore";
 import ScrollLinkedProjects from "../Components/HorizontalScrollBarProjects";
+import type { AccountDTO } from "../types/Account";
 
 const ProjectOverview = () => {
 
@@ -19,7 +20,7 @@ const ProjectOverview = () => {
         data: account,
         isLoading: isAccountLoading,
         error: accountError
-    } = useQuery({
+    } = useQuery<AccountDTO>({
         queryKey: ["account"],
         queryFn: async () => {
             const response = await fetch(`${API_URL}/${user.id}/accounts/${user.id}`);
@@ -44,8 +45,10 @@ const ProjectOverview = () => {
     }
     console.log(projectId)
 
-    console.log(account.madeProjects)
+   
 
+    if (account !== undefined) {
+         console.log(account.madeProjects)
     return (
         <>
             <Card>
@@ -98,7 +101,7 @@ const ProjectOverview = () => {
                 </div>
             </Card>
         </>
-    );
+    )}
 };
 
 export default ProjectOverview;

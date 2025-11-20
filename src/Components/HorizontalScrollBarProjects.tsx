@@ -11,8 +11,13 @@ import { useRef } from "react"
 import { Card } from "react-bootstrap"
 import { updateProjectId } from "../stores/projectIdStore"
 import ProgressCalculator from "./ProgressCalculator"
+import type { ProjectShortDTO } from "../types/Project"
 
-export default function ScrollLinkedProjects({ data }) {
+interface ScrollLinkedProjectsProps {
+    data: ProjectShortDTO[]
+}
+
+export default function ScrollLinkedProjects({ data }: ScrollLinkedProjectsProps) {
     const ref = useRef(null)
     const { scrollXProgress } = useScroll({ container: ref })
     const maskImage = useScrollOverflowMask(scrollXProgress)
