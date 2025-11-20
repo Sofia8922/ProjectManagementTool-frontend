@@ -16,13 +16,16 @@ export interface ProjectDTO {
   tasks: TaskShortDTO[];
   scrappedStatus: boolean;
   projectCreator: AccountShortDTO;
-  developers: AccountShortDTO;
-  customers: AccountShortDTO;
+  developers: AccountShortDTO[];
+  customers: AccountShortDTO[];
 }
 
 export interface ProjectEditDTO {
   name: string;
   description: string;
+  scrappedStatus: boolean;
+  developers: AccountShortDTO[];
+  customers: AccountShortDTO[];
 }
 
 export interface ProjectShortDTO {

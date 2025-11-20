@@ -17,6 +17,7 @@ const CustomModal = ({ title, children, handleSubmit, show , setShow }: modalPro
                 show={show}
                 backdrop="static"
                 keyboard={false}
+                style={{ width: "100%"}}
             >
                 <Modal.Header>
                     <Modal.Title>{title}</Modal.Title>
