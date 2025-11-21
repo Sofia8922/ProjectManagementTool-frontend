@@ -8,6 +8,8 @@ import { useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import type { TaskDTO } from "../types/Task";
 import type { AccountDTO } from "../types/Account";
+import type { CommentCreateDTO } from "../types/Comment";
+import { useProjectId } from "../stores/projectIdStore";
 
 interface TaskDetailModalProps {
     taskId: number;
@@ -16,8 +18,10 @@ interface TaskDetailModalProps {
 const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
 
     const user = useUser();
+    const projectId = useProjectId();
     const navigate = useNavigate();
     const queryClient = new QueryClient();
+    const [commentData, setCommentData] = useState<CommentCreateDTO>({content: "", authorId: user.id, taskId: taskId})
     const [showTaskDetailModal, setShowTaskDetailModal] = useState(false);
     const handleSubmitTaskDetailModal = () => {
         console.log("handled submit")
@@ -39,6 +43,40 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
             setShowTaskDetailModal(false)
         }
     });
+
+    const deleteComment = useMutation({
+        mutationFn: async (deleteId: number) => {
+            const response = await fetch(`${API_URL}/${user.id}/comments/${deleteId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            if (!response.ok) throw new Error('failed to delete comment');
+            return
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["comment"] });
+            console.log("succesfully deleted task")
+            setShowTaskDetailModal(false)
+        }
+    }); 
+
+    const createComment = useMutation({
+        mutationFn: async (commentCreateData: CommentCreateDTO) => {
+            const response = await fetch(`${API_URL}/${user.id}/comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(commentCreateData)
+            })
+            if (!response.ok) throw new Error('failed to place comment');
+            return
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["task", taskId]});
+            queryClient.invalidateQueries({queryKey: ["project", projectId]})
+            setCommentData({content: "", authorId: user.id, taskId: taskId})
+            console.log("comment placed")
+        }
+    })
 
     const {
         data: account,
@@ -69,6 +107,17 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
             return response.json();
         },
     })
+
+         const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value } = event.target;
+        setCommentData({ ...commentData, [name]: value });
+    }
+
+    const handleSubmit = (event: React.FormEvent<HTMLElement>) => {
+        event.preventDefault();
+        createComment.mutate(commentData)
+        console.log("comment mutation submitted")
+    }
 
     if (isAccountLoading) {
         return <p>account loading</p>
@@ -116,16 +165,22 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
                     </Card>
                     <Card>
                         <Row>
-                            <TaskEditModal taskData={task}/> {account.role !== "CUSTOMER" && <button onClick={() => deleteTask.mutate()}>Delete task</button>}
+                            <TaskEditModal taskData={task}/>
+                            {account.role !== "CUSTOMER" && <button onClick={() => deleteTask.mutate()}>Delete task</button>}    
                         </Row>
                     </Card>
                     <Card>
                         comments
+                        <form onSubmit={handleSubmit}>
+                        <textarea id="content" name="content" value={commentData.content} onChange={handleChange} />
+                        <button className="placeComment" type="submit">Place comment</button>
+                        </form>
                         {task.comments.map((comment) => (
                             <Fragment key={comment.id}>
                                 <li>
-                                    <h5>{comment.id}</h5>
+                                    <p>{comment.author.name}</p>
                                     <p>{comment.content}</p>
+                                    {user.id === comment.author.id && <button onClick={() => deleteComment.mutate(comment.id)}>Delete comment</button>}
                                 </li>
                             </Fragment>
                         ))}
