@@ -117,7 +117,6 @@ const ProjectDetail = () => {
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                <TaskDetailModal />
                             </Card>
                         </Card>
                     </div>

@@ -12,22 +12,16 @@ import type { AccountNameDTO, AccountShortDTO } from "../types/Account";
 const EditProjectModal = ({ project }) => {
 
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
-    // const [scrappedStatus, setScrappedStatus] = useState(false);
     const user = useUser();
-    const [formData, setFormData] = useState({ name: '', description: '', scrappedStatus: false, developers: new Array<AccountNameDTO>(), customers: new Array<AccountNameDTO>() })
+    const [formData, setFormData] = useState({ name: '', description: '', scrappedStatus: false, developers: new Array<AccountShortDTO>(), customers: new Array<AccountShortDTO>() })
     const [errorMessage, setErrorMessage] = useState('')
-    const [newDevelopers, setNewDevelopers] = useState<AccountNameDTO[]>([]);
-    const [oldDevelopers, setOldDevelopers] = useState<AccountNameDTO[]>([]);
-    const [newCustomers, setNewCustomers] = useState<AccountNameDTO[]>([]);
-    const [oldCustomers, setOldCustomers] = useState<AccountNameDTO[]>([]);
+    const [newDevelopers, setNewDevelopers] = useState<AccountShortDTO[]>([]);
+    const [oldDevelopers, setOldDevelopers] = useState<AccountShortDTO[]>([]);
+    const [newCustomers, setNewCustomers] = useState<AccountShortDTO[]>([]);
+    const [oldCustomers, setOldCustomers] = useState<AccountShortDTO[]>([]);
     const [ scrappedStatus, setScrappedStatus] = useState(false);
-    // const [listAlt, setListAlt] = useState<Foo[]>([]);
 
     const queryClient = useQueryClient()
-    let nextId = 0;
-    let oldNextId = 0;
-    let nextCustomerId = 0;
-    let oldNextCustomerId = 0;
 
     const editProject = useMutation({
         mutationFn: async (editData: ProjectEditDTO) => {
@@ -46,8 +40,8 @@ const EditProjectModal = ({ project }) => {
                 setErrorMessage(response.message)
             } else {
                 console.log(response)
-                setFormData({ name: '', description: '', scrappedStatus: false, developers: new Array<AccountNameDTO>(), customers: new Array<AccountNameDTO>() })
-                queryClient.invalidateQueries({ queryKey: ['account'] })
+                setFormData({ name: '', description: '', scrappedStatus: false, developers: new Array<AccountShortDTO>(), customers: new Array<AccountShortDTO>() })
+                queryClient.invalidateQueries({ queryKey: ['project'] })
                 setShowEditProjectModal(false)
             }
         },
@@ -56,38 +50,23 @@ const EditProjectModal = ({ project }) => {
         }
     })
 
-
-    // const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-    //     const { name, value } = event.target;
-    //     setFormData({ ...formData, [name]: value });
-    //     console.log(formData)
-    // }
-
-    const handleSubmitEditProject = (event) => {
+    const handleSubmitEditProject = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-    const obj = formData;
-    const data = new FormData(event.target);
-        // Loop through FormData entries
-    for (const [key, value] of data.entries()) {
-        // If the key is 'pages', convert the value to a number
-        if (key === 'scrappedStatus') {
-            obj[key] = scrappedStatus;
-        }
-        // If the key is 'developers', make the value the array of developers
-        else if (key === 'developers') {
-            obj[key] = newDevelopers;
-        }
-        else if (key === 'customers') {
-            obj[key] = newCustomers;
-        }        // For all other fields, store the value as is
-        else {
-            obj[key] = value;
-        }
-    }
+
         console.log("handled submit Edit Project")
-        editProject(formData)
+        accountArrays();
+        
+        setFormData({
+            ...formData, 
+            scrappedStatus: scrappedStatus, developers: project.developers, customers: project.customers
+    })
+
+        console.log(formData)
+        editProject.mutate(formData)
     }
 
+        console.log(formData)
+        
     const {
         data: accounts,
         isLoading: isAccountLoading,
@@ -112,48 +91,88 @@ const EditProjectModal = ({ project }) => {
 
     // patricks handle change methode
     const handleChangeBootstrap = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // console.log(event.target)
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value })
-        console.log(formData)
+        // console.log(formData)
     }
+
+    const accountArrays = ()=>{
+        // verwijdert alle devs die verwijderd moeten worden van het project
+        project.developers.filter(item => 
+            !idsRemoveDevs.includes(item.id)
+        )
+        // voegt alle nieuwe devs toe aan het project
+        newDevelopers.map(dev=>(
+            project.developers.push(dev)
+        ))
+
+        // verwijdert alle customers die verwijderd moeten worden van het project
+        project.customers.filter(item => 
+            !idsRemoveClient.includes(item.id)
+        )
+        // voegt alle nieuwe customers toe aan het project
+        newCustomers.map(client=>(
+            project.customers.push(client)
+        ))
+    }
+
+    const idsAddDevs = project.developers.map(item=> item.id)
+    const moreIdsAddDevs = newDevelopers.map(item=> item.id)
+    const idsRemoveDevs = oldDevelopers.map(item=> item.id)
+
+    const idsAddClient = project.customers.map(item=> item.id)
+    const moreIdsAddClient = newCustomers.map(item=> item.id)
+    const idsRemoveClient = oldCustomers.map(item=> item.id)
 
     const developerAccounts = accounts.filter(item =>
-        item.role === 'DEVELOPER');
+        item.role === 'DEVELOPER' && !idsAddDevs.includes(item.id) && !moreIdsAddDevs.includes(item.id)
+    )
+
+    const projectDeveloperAccounts = project.developers.filter(item =>
+        item.role === "DEVELOPER" && !idsRemoveDevs.includes(item.id)
+    )
 
     const customerAccounts = accounts.filter(item =>
-        item.role === 'CUSTOMER');
+        item.role === 'CUSTOMER' && !idsAddClient.includes(item.id) && !moreIdsAddClient.includes(item.id)
+    )
 
-    const addDeveloper = (developerName) => {
-        console.log("adding developer")
-        console.log(newDevelopers)
+    const projectCustomerAccounts = project.customers.filter(item =>
+        item.role === "CUSTOMER" && !idsRemoveClient.includes(item.id)
+    )
+    
+    // const customerAccounts = accounts.filter(item =>
+    //     item.role === 'CUSTOMER');
+
+    const addDeveloper = (developer) => {
+        console.log("adding developer") 
         setNewDevelopers([
             ...newDevelopers,
-            { id: nextId++, name: developerName }
-        ]);
+            { id: developer.id, name: developer.name, email: developer.email, role:developer.role }
+        ])
     }
 
-    const removeDeveloper = (developerName) => {
+    const removeDeveloper = (developer) => {
         console.log("removing developer")
-        console.log(oldDevelopers)
         setOldDevelopers([
             ...oldDevelopers,
-            { id: oldNextId++, name: developerName }
+            { id: developer.id, name: developer.name, email: developer.email, role:developer.role }
         ]);
     }
 
-        const addCustomer = (customerName) => {
+        const addCustomer = (customer) => {
         console.log("adding customer")
         setNewCustomers([
             ...newCustomers,
-            { id: nextCustomerId++, name: customerName }
+            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
         ]);
     }
 
-    const removeCustomer = (customerName) => {
+    const removeCustomer = (customer) => {
         console.log("removing customer")
         setOldCustomers([
             ...oldCustomers,
-            { id: oldNextCustomerId++, name: customerName }
+            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
         ]);
     }
 
@@ -161,7 +180,6 @@ const EditProjectModal = ({ project }) => {
         if (scrappedStatus == false){setScrappedStatus(true)}
         else {setScrappedStatus(false)}
     }
-
 
     // checks returnen yes als ze aangevinkt zijn en niets als ze niet aangevinkt zijn dus daar moet ik nog ff mee dealen met bv een ternary
     // https://stackoverflow.com/questions/77319339/return-boolean-value-from-checkbox-on-html-form
@@ -172,27 +190,27 @@ const EditProjectModal = ({ project }) => {
         <>
             <Button as="input" variant="primary" value={"Edit project"} onClick={() => setShowEditProjectModal(true)} />
 
-            <CustomModal title={project.name} handleSubmit={handleSubmitEditProject} show={showEditProjectModal} setShow={setShowEditProjectModal}>
-                <Form>
+            <CustomModal title={project.name} handleSubmit={()=>handleSubmitEditProject} show={showEditProjectModal} setShow={setShowEditProjectModal}>
+                <Form onSubmit={handleSubmitEditProject}>
                     <Row>
                         <Col>
                             <Form.Group className="mb-3" controlId="formBasicName">
                                 <Form.Label>Project name</Form.Label>
-                                <Form.Control type="email" placeholder={project.name} defaultValue={project.name} onChange={handleChangeBootstrap} />
+                                <Form.Control name="name" type="text" placeholder={project.name} defaultValue={project.name} onChange={handleChangeBootstrap} />
                                 <Form.Text className="text-muted">
                                 </Form.Text>
                             </Form.Group>
                         </Col>
                         <Col>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="projectScrapped" onChange={changeScrappedStatus} />
+                                <Form.Check name="scrappedStatus" type="checkbox" label="projectScrapped" onChange={changeScrappedStatus} />
                             </Form.Group>
                         </Col>
                     </Row>
 
                     <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Project description</Form.Label>
-                        <Form.Control type="text" as="textarea" rows={3} placeholder={project.description} defaultValue={project.description} onChange={handleChangeBootstrap}/>
+                        <Form.Control name="description" type="text" as="textarea" rows={3} placeholder={project.description} defaultValue={project.description} onChange={handleChangeBootstrap}/>
                     </Form.Group>
 
                     <Card>
@@ -206,7 +224,7 @@ const EditProjectModal = ({ project }) => {
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
                                             {developerAccounts.map(developer => (
-                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => addDeveloper(developer.name)}> {developer.name}</Dropdown.Item>
+                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => addDeveloper(developer)}> {developer.name}</Dropdown.Item>
                                             ))}
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -214,20 +232,22 @@ const EditProjectModal = ({ project }) => {
 
                                     <br />
                                     <h6>Developers to be added to the team</h6>
+
+                                            {/* deze buttons naar een methode laten verwijzen die newDevelopers array aanpast en developerAccounts array aanpast */}
                                     <div>{newDevelopers.map(developer => (
-                                        <div>{developer.name}</div>
+                                        <input key={developer.id} type="button" onClick={()=>developerAccounts.push(developer)} value={developer.name}></input>
                                     ))}</div>
                                     <br />
 
 
-                                    <h6>Current developers</h6>
+                                    <h6>Remove developers</h6>
                                     <Dropdown className="remove developers" autoClose="outside">
                                         <Dropdown.Toggle id="remove developers">
                                             remove developers
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            {project.developers.map(developer =>(
-                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => removeDeveloper(developer.name)}>{developer.name}</Dropdown.Item>
+                                            {projectDeveloperAccounts.map(developer =>(
+                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => removeDeveloper(developer)}>{developer.name}</Dropdown.Item>
                                             ))}
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -235,7 +255,7 @@ const EditProjectModal = ({ project }) => {
                                     <br />
                                     <h6>Developers to be removed from the team</h6>
                                     <div>{oldDevelopers.map(developer => (
-                                        <div>{developer.name}</div>
+                                        <div key={developer.id}>{developer.name}</div>
                                     ))}</div>
                                     <br />
                                 </Col>
@@ -253,7 +273,7 @@ const EditProjectModal = ({ project }) => {
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
                                             {customerAccounts.map(customer => (
-                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => addCustomer(customer.name)}> {customer.name}</Dropdown.Item>
+                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => addCustomer(customer)}> {customer.name}</Dropdown.Item>
                                             ))}
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -262,19 +282,19 @@ const EditProjectModal = ({ project }) => {
                                     <br />
                                     <h6>Customers to be added to the team</h6>
                                     <div>{newCustomers.map(customer => (
-                                        <div>{customer.name}</div>
+                                        <div key={customer.id}>{customer.name}</div>
                                     ))}</div>
                                     <br />
 
 
-                                    <h6>Current customers</h6>
+                                    <h6>Remove customers</h6>
                                     <Dropdown className="remove customers" autoClose="outside">
                                         <Dropdown.Toggle id="remove customers">
-                                            remove customers
+                                            Remove customers
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            {project.customers.map(customer =>(
-                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => removeCustomer(customer.name)}>{customer.name}</Dropdown.Item>
+                                            {projectCustomerAccounts.map(customer =>(
+                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => removeCustomer(customer)}>{customer.name}</Dropdown.Item>
                                             ))}
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -282,25 +302,23 @@ const EditProjectModal = ({ project }) => {
                                     <br />
                                     <h6>Customers to be removed from the team</h6>
                                     <div>{oldCustomers.map(customer => (
-                                        <div>{customer.name}</div>
+                                        <div key={customer.id}>{customer.name}</div>
                                     ))}</div>
+
                                     <br />
                                 </Col>
                             </Card>
                         </Row>
                     </Card>
+                    <Button type="submit" variant="primary" value="Confirm"
+                    //  onClick={() => { 
+                    //              handleSubmitEditProject()
+                    //             //  setShow(false) //Patrick: Do not hide automatically, wait until there's no errors
+                    //             }} 
+                    />
                 </Form>
             </CustomModal >
         </>
-
     )
-
 }
 export default EditProjectModal
-
-
-// {project.developers.map(developer => (
-//     <li key={developer.id}>
-//         {developer.name}
-//     </li>
-// ))}
