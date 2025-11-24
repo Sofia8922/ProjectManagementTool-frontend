@@ -183,6 +183,26 @@ const EditProjectModal = ({ project }) => {
         ]);
     }
 
+    const removeNewDev = (developer) => {
+        developerAccounts.push(developer)
+        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
+    }
+
+    const removeNewClient = (customer) => {
+        customerAccounts.push(customer)
+        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
+    }
+
+    const resetRemovedDev = (developer) => {
+        projectDeveloperAccounts.push(developer)
+        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
+    }
+
+    const resetRemovedClient = (customer) => {
+        projectCustomerAccounts.push(customer)
+        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
+    }
+
     const changeScrappedStatus = ()=>{
         if (scrappedStatus == false){setScrappedStatus(true)}
         else {setScrappedStatus(false)}
@@ -242,7 +262,7 @@ const EditProjectModal = ({ project }) => {
 
                                             {/* deze buttons naar een methode laten verwijzen die newDevelopers array aanpast en developerAccounts array aanpast */}
                                     <div>{newDevelopers.map(developer => (
-                                        <input key={developer.id} type="button" onClick={()=>developerAccounts.push(developer)} value={developer.name}></input>
+                                        <input key={developer.id} type="button" onClick={()=>removeNewDev(developer)} value={developer.name}></input>
                                     ))}</div>
                                     <br />
 
@@ -262,7 +282,7 @@ const EditProjectModal = ({ project }) => {
                                     <br />
                                     <h6>Developers to be removed from the team</h6>
                                     <div>{oldDevelopers.map(developer => (
-                                        <div key={developer.id}>{developer.name}</div>
+                                        <input key={developer.id} type="button" onClick={()=> resetRemovedDev(developer)} value={developer.name}></input>
                                     ))}</div>
                                     <br />
                                 </Col>
@@ -289,10 +309,9 @@ const EditProjectModal = ({ project }) => {
                                     <br />
                                     <h6>Customers to be added to the team</h6>
                                     <div>{newCustomers.map(customer => (
-                                        <div key={customer.id}>{customer.name}</div>
+                                        <input key={customer.id} type="button" onClick={()=> removeNewClient(customer)} value={customer.name}></input>
                                     ))}</div>
                                     <br />
-
 
                                     <h6>Remove customers</h6>
                                     <Dropdown className="remove customers" autoClose="outside">
@@ -309,8 +328,10 @@ const EditProjectModal = ({ project }) => {
                                     <br />
                                     <h6>Customers to be removed from the team</h6>
                                     <div>{oldCustomers.map(customer => (
-                                        <div key={customer.id}>{customer.name}</div>
+                                        <input key={customer.id} type="button" onClick={()=>resetRemovedClient(customer)} value={customer.name}></input>
                                     ))}</div>
+
+
 
                                     <br />
                                 </Col>
