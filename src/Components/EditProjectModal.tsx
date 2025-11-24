@@ -7,13 +7,14 @@ import type { ProjectEditDTO } from "../types/Project";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
 import type { AccountNameDTO, AccountShortDTO } from "../types/Account";
+import { useProjectId } from "../stores/projectIdStore";
 
 
 const EditProjectModal = ({ project }) => {
 
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const user = useUser();
-    const [formData, setFormData] = useState({ name: '', description: '', scrappedStatus: false, developers: new Array<AccountShortDTO>(), customers: new Array<AccountShortDTO>() })
+    const [formData, setFormData] = useState({ name: '', description: '', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
     const [errorMessage, setErrorMessage] = useState('')
     const [newDevelopers, setNewDevelopers] = useState<AccountShortDTO[]>([]);
     const [oldDevelopers, setOldDevelopers] = useState<AccountShortDTO[]>([]);
@@ -25,7 +26,7 @@ const EditProjectModal = ({ project }) => {
 
     const editProject = useMutation({
         mutationFn: async (editData: ProjectEditDTO) => {
-            const response = await fetch(`${API_URL}/${user.id}/projects`,
+            const response = await fetch(`${API_URL}/${user.id}/projects/${project.id}`,
                 {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -36,11 +37,14 @@ const EditProjectModal = ({ project }) => {
             return response.json();
         },
         onSuccess: (response) => {
+            console.log(JSON.stringify(formData))
             if (response.message !== undefined) {
                 setErrorMessage(response.message)
+                console.log(errorMessage)
+                console.log(response.message)
             } else {
                 console.log(response)
-                setFormData({ name: '', description: '', scrappedStatus: false, developers: new Array<AccountShortDTO>(), customers: new Array<AccountShortDTO>() })
+                setFormData({ name: '', description: '', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
                 queryClient.invalidateQueries({ queryKey: ['project'] })
                 setShowEditProjectModal(false)
             }
@@ -62,6 +66,9 @@ const EditProjectModal = ({ project }) => {
     })
 
         console.log(formData)
+        // console.log(useProjectId)
+        console.log(project.id)
+        console.log(user.id)
         editProject.mutate(formData)
     }
 
