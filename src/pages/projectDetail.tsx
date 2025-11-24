@@ -74,7 +74,7 @@ const ProjectDetail = () => {
                             <h2>{project.name}</h2>
                             Tasks completed
                             <h4><ProgressCalculator id={project.id} /></h4>
-                            <EditProjectModal />
+                            <EditProjectModal project = {project} />
                             project description
                             <h2>{project.description}</h2>
                         </div>
@@ -120,7 +120,6 @@ const ProjectDetail = () => {
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                {/* <TaskDetailModal /> */}
                             </Card>
                         </Card>
                     </div>
