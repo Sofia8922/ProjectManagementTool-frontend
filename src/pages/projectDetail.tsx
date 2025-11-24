@@ -73,7 +73,7 @@ const ProjectDetail = () => {
                             project title
                             <h2>{project.name}</h2>
                             Tasks completed
-                            <h2><ProgressCalculator id={project.id} /></h2>
+                            <h4><ProgressCalculator id={project.id} /></h4>
                             <EditProjectModal />
                             project description
                             <h2>{project.description}</h2>
