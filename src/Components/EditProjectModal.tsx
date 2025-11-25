@@ -6,15 +6,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ProjectEditDTO } from "../types/Project";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
-import type { AccountNameDTO, AccountShortDTO } from "../types/Account";
-import { useProjectId } from "../stores/projectIdStore";
+import type {  AccountShortDTO } from "../types/Account";
 
 
 const EditProjectModal = ({ project }) => {
 
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const user = useUser();
-    const [formData, setFormData] = useState({ name: '', description: '', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
+    // default values voor name en description moeten "#" zijn omdat de values niet blanco mogen zijn en als je ze niet aanpast veranderen de waarden niet 
+    const [formData, setFormData] = useState({ name: '#', description: '#', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
     const [errorMessage, setErrorMessage] = useState('')
     const [newDevelopers, setNewDevelopers] = useState<AccountShortDTO[]>([]);
     const [oldDevelopers, setOldDevelopers] = useState<AccountShortDTO[]>([]);
@@ -54,15 +54,15 @@ const EditProjectModal = ({ project }) => {
         }
     })
 
-    const handleSubmitEditProject = (event: { preventDefault: () => void; }) => {
+    const handleSubmitEditProject = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
 
         console.log("handled submit Edit Project")
         accountArrays();
         
-        setFormData({
+        await setFormData({
             ...formData, 
-            scrappedStatus: scrappedStatus, developers: project.developers, customers: project.customers
+            scrappedStatus: scrappedStatus, projectDevelopers: project.projectDevelopers, projectCustomers: project.projectCustomers
     })
 
         console.log(formData)
@@ -73,7 +73,7 @@ const EditProjectModal = ({ project }) => {
     }
 
         console.log(formData)
-        
+
     const {
         data: accounts,
         isLoading: isAccountLoading,
@@ -106,29 +106,29 @@ const EditProjectModal = ({ project }) => {
 
     const accountArrays = ()=>{
         // verwijdert alle devs die verwijderd moeten worden van het project
-        project.developers.filter(item => 
+        project.projectDevelopers.filter(item => 
             !idsRemoveDevs.includes(item.id)
         )
         // voegt alle nieuwe devs toe aan het project
         newDevelopers.map(dev=>(
-            project.developers.push(dev)
+            project.projectDevelopers.push(dev)
         ))
 
         // verwijdert alle customers die verwijderd moeten worden van het project
-        project.customers.filter(item => 
+        project.projectCustomers.filter(item => 
             !idsRemoveClient.includes(item.id)
         )
         // voegt alle nieuwe customers toe aan het project
         newCustomers.map(client=>(
-            project.customers.push(client)
+            project.projectCustomers.push(client)
         ))
     }
 
-    const idsAddDevs = project.developers.map(item=> item.id)
+    const idsAddDevs = project.projectDevelopers.map(item=> item.id)
     const moreIdsAddDevs = newDevelopers.map(item=> item.id)
     const idsRemoveDevs = oldDevelopers.map(item=> item.id)
 
-    const idsAddClient = project.customers.map(item=> item.id)
+    const idsAddClient = project.projectCustomers.map(item=> item.id)
     const moreIdsAddClient = newCustomers.map(item=> item.id)
     const idsRemoveClient = oldCustomers.map(item=> item.id)
 
@@ -136,7 +136,7 @@ const EditProjectModal = ({ project }) => {
         item.role === 'DEVELOPER' && !idsAddDevs.includes(item.id) && !moreIdsAddDevs.includes(item.id)
     )
 
-    const projectDeveloperAccounts = project.developers.filter(item =>
+    const projectDeveloperAccounts = project.projectDevelopers.filter(item =>
         item.role === "DEVELOPER" && !idsRemoveDevs.includes(item.id)
     )
 
@@ -144,7 +144,7 @@ const EditProjectModal = ({ project }) => {
         item.role === 'CUSTOMER' && !idsAddClient.includes(item.id) && !moreIdsAddClient.includes(item.id)
     )
 
-    const projectCustomerAccounts = project.customers.filter(item =>
+    const projectCustomerAccounts = project.projectCustomers.filter(item =>
         item.role === "CUSTOMER" && !idsRemoveClient.includes(item.id)
     )
     

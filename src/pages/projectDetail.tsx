@@ -97,7 +97,7 @@ const ProjectDetail = () => {
                                 <Card>
                                     <Row className="justify-content-flex-row">
                                         <NewTaskModal />
-                                        <ManageLabelsModal />
+                                        {/* <ManageLabelsModal /> */}
                                     </Row>
                                 </Card>
                             </Card>
@@ -135,20 +135,21 @@ const ProjectDetail = () => {
 
                             <div>
                                 <h4>dev team</h4>
-                                {project.developers.map(developer => (
-                                    <li key={developer.id}>
+                                {project.projectDevelopers.length !==0 ? <>{project.projectDevelopers.map(developer => (
+                                    <div key={developer.id}>
                                         {developer.name}
-                                    </li>
-                                ))}
+                                    </div>
+                                ))}</>: "no developers"}
                                 {/* {map project.accounts if role==DEVELOPER */}
                             </div>
                             <div>
                                 <h4>customers</h4>
-                                {project.customers.map(customer => (
-                                    <li key={customer.id}>
+                                {project.projectCustomers.length !==0 ? <>
+                                {project.projectCustomers.map(customer => (
+                                    <div key={customer.id}>
                                         {customer.name}
-                                    </li>
-                                ))}
+                                    </div>
+                                ))}</>: "no customers" }
                                 {/* {map project.accounts if role==CUSTOMER */}
                             </div>
                         </div>
