@@ -185,6 +185,35 @@ const EditProjectModal = ({ project }) => {
         else {setScrappedStatus(false)}
     }
 
+    const removeNewDev = (developer) => {
+        developerAccounts.push(developer)
+        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
+    }
+
+    const removeNewClient = (customer) => {
+        customerAccounts.push(customer)
+        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
+    }
+
+    const resetRemovedDev = (developer) => {
+        projectDeveloperAccounts.push(developer)
+        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
+    }
+
+    const resetRemovedClient = (customer) => {
+        projectCustomerAccounts.push(customer)
+        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
+    }
+
+    const changeScrappedStatus = ()=>{
+        if (scrappedStatus == false){setScrappedStatus(true)}
+        else {setScrappedStatus(false)}
+    }
+
+    // checks returnen yes als ze aangevinkt zijn en niets als ze niet aangevinkt zijn dus daar moet ik nog ff mee dealen met bv een ternary
+    // https://stackoverflow.com/questions/77319339/return-boolean-value-from-checkbox-on-html-form
+    // deze site laat zien hoe je door de formdata heen loopt en dit soort dingen met if statements aan kunt passen naar de juiste waardes
+    // er staan 2 voorbeelden op de site maar de eerste vind ik het duidelijkst en ik denk dat ik toch nog door de form data heen moet loopen om de data op te schonen voor de devs en clients
 
     return (
         <>
