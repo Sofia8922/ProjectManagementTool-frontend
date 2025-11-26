@@ -13,11 +13,8 @@ const EditProjectModal = ({ project }) => {
 
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const user = useUser();
-    // default values voor name en description moeten "#" zijn omdat de values niet blanco mogen zijn en als je ze niet aanpast veranderen de waarden niet 
-    const [formData, setFormData] = useState({ name: '#', description: '#', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
+    const [formData, setFormData] = useState({ name: project.name, description: project.description, scrappedStatus: false, projectDevelopers: project.projectDevelopers, projectCustomers: project.projectCustomers })
     const [errorMessage, setErrorMessage] = useState('')
-    const [newDevelopers, setNewDevelopers] = useState<AccountShortDTO[]>([]);
-    const [oldDevelopers, setOldDevelopers] = useState<AccountShortDTO[]>([]);
     const [newCustomers, setNewCustomers] = useState<AccountShortDTO[]>([]);
     const [oldCustomers, setOldCustomers] = useState<AccountShortDTO[]>([]);
     const [ scrappedStatus, setScrappedStatus] = useState(false);
@@ -44,7 +41,7 @@ const EditProjectModal = ({ project }) => {
                 console.log(response.message)
             } else {
                 console.log(response)
-                setFormData({ name: '', description: '', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
+                setFormData({ name: project.name, description: project.description, scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
                 queryClient.invalidateQueries({ queryKey: ['project'] })
                 setShowEditProjectModal(false)
             }
@@ -72,8 +69,11 @@ const EditProjectModal = ({ project }) => {
         editProject.mutate(formData)
     }
 
+        console.log("formdata")
         console.log(formData)
-
+        console.log("project Developers")
+        console.log(formData.projectDevelopers)
+        
     const {
         data: accounts,
         isLoading: isAccountLoading,
@@ -104,69 +104,56 @@ const EditProjectModal = ({ project }) => {
         // console.log(formData)
     }
 
-    const accountArrays = ()=>{
-        // verwijdert alle devs die verwijderd moeten worden van het project
-        project.projectDevelopers.filter(item => 
-            !idsRemoveDevs.includes(item.id)
-        )
-        // voegt alle nieuwe devs toe aan het project
-        newDevelopers.map(dev=>(
-            project.projectDevelopers.push(dev)
-        ))
 
-        // verwijdert alle customers die verwijderd moeten worden van het project
-        project.projectCustomers.filter(item => 
-            !idsRemoveClient.includes(item.id)
-        )
-        // voegt alle nieuwe customers toe aan het project
-        newCustomers.map(client=>(
-            project.projectCustomers.push(client)
-        ))
-    }
-
-    const idsAddDevs = project.projectDevelopers.map(item=> item.id)
-    const moreIdsAddDevs = newDevelopers.map(item=> item.id)
-    const idsRemoveDevs = oldDevelopers.map(item=> item.id)
+    //filters op basis van ID
+    const idsAddDevs = formData.projectDevelopers.map(item=> item.id)
 
     const idsAddClient = project.projectCustomers.map(item=> item.id)
     const moreIdsAddClient = newCustomers.map(item=> item.id)
     const idsRemoveClient = oldCustomers.map(item=> item.id)
 
-    const developerAccounts = accounts.filter(item =>
-        item.role === 'DEVELOPER' && !idsAddDevs.includes(item.id) && !moreIdsAddDevs.includes(item.id)
+    //alle developers in de app
+    let developerAccounts = accounts.filter(item =>
+        item.role === 'DEVELOPER' && !idsAddDevs.includes(item.id) 
     )
 
-    const projectDeveloperAccounts = project.projectDevelopers.filter(item =>
-        item.role === "DEVELOPER" && !idsRemoveDevs.includes(item.id)
-    )
+    // alle developers in het project
+    let projectDeveloperAccounts = formData.projectDevelopers
 
+    // alle customers in de app
     const customerAccounts = accounts.filter(item =>
         item.role === 'CUSTOMER' && !idsAddClient.includes(item.id) && !moreIdsAddClient.includes(item.id)
     )
 
+    // alle customers in het project
     const projectCustomerAccounts = project.projectCustomers.filter(item =>
         item.role === "CUSTOMER" && !idsRemoveClient.includes(item.id)
     )
     
-    // const customerAccounts = accounts.filter(item =>
-    //     item.role === 'CUSTOMER');
 
     const addDeveloper = (developer) => {
-        console.log("adding developer") 
-        setNewDevelopers([
-            ...newDevelopers,
-            { id: developer.id, name: developer.name, email: developer.email, role:developer.role }
-        ])
+        console.log("adding developer")
+        const devs = [...formData.projectDevelopers, developer];
+        setFormData({
+            ...formData, 
+            projectDevelopers: devs
+    })
+    projectDeveloperAccounts = [...projectDeveloperAccounts, newDevelopers ]
     }
 
     const removeDeveloper = (developer) => {
         console.log("removing developer")
-        setOldDevelopers([
-            ...oldDevelopers,
-            { id: developer.id, name: developer.name, email: developer.email, role:developer.role }
-        ]);
+        const devs = formData.projectDevelopers.filter(item => item.id !== developer.id)
+        setFormData({
+            ...formData, 
+            projectDevelopers: devs
+    })
+    developerAccounts = [... developerAccounts, developer]
     }
 
+
+
+    
         const addCustomer = (customer) => {
         console.log("adding customer")
         setNewCustomers([
@@ -183,19 +170,9 @@ const EditProjectModal = ({ project }) => {
         ]);
     }
 
-    const removeNewDev = (developer) => {
-        developerAccounts.push(developer)
-        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
-    }
-
     const removeNewClient = (customer) => {
         customerAccounts.push(customer)
         setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
-    }
-
-    const resetRemovedDev = (developer) => {
-        projectDeveloperAccounts.push(developer)
-        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
     }
 
     const resetRemovedClient = (customer) => {
@@ -208,10 +185,6 @@ const EditProjectModal = ({ project }) => {
         else {setScrappedStatus(false)}
     }
 
-    // checks returnen yes als ze aangevinkt zijn en niets als ze niet aangevinkt zijn dus daar moet ik nog ff mee dealen met bv een ternary
-    // https://stackoverflow.com/questions/77319339/return-boolean-value-from-checkbox-on-html-form
-    // deze site laat zien hoe je door de formdata heen loopt en dit soort dingen met if statements aan kunt passen naar de juiste waardes
-    // er staan 2 voorbeelden op de site maar de eerste vind ik het duidelijkst en ik denk dat ik toch nog door de form data heen moet loopen om de data op te schonen voor de devs en clients
 
     return (
         <>
@@ -258,16 +231,16 @@ const EditProjectModal = ({ project }) => {
                                     <br />
 
                                     <br />
-                                    <h6>Developers to be added to the team</h6>
+                                    <h6>Project developers:</h6>
+                                    <div>
+                                        <br/>
+                                        {projectDeveloperAccounts.map(developer=>(
+                                            <input key={developer.id} type="button" onClick={()=> removeDeveloper(developer)} value={developer.name} ></input>
+                                        ))}
+                                    </div>
 
-                                            {/* deze buttons naar een methode laten verwijzen die newDevelopers array aanpast en developerAccounts array aanpast */}
-                                    <div>{newDevelopers.map(developer => (
-                                        <input key={developer.id} type="button" onClick={()=>removeNewDev(developer)} value={developer.name}></input>
-                                    ))}</div>
-                                    <br />
 
-
-                                    <h6>Remove developers</h6>
+                                    {/* <h6>Remove developers</h6>
                                     <Dropdown className="remove developers" autoClose="outside">
                                         <Dropdown.Toggle id="remove developers">
                                             remove developers
@@ -284,7 +257,7 @@ const EditProjectModal = ({ project }) => {
                                     <div>{oldDevelopers.map(developer => (
                                         <input key={developer.id} type="button" onClick={()=> resetRemovedDev(developer)} value={developer.name}></input>
                                     ))}</div>
-                                    <br />
+                                    <br /> */}
                                 </Col>
                             </Card>
 
