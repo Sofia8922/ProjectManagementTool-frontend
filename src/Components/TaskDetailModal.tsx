@@ -9,16 +9,14 @@ import { useNavigate } from "react-router";
 import type { TaskDTO } from "../types/Task";
 import type { AccountDTO } from "../types/Account";
 import type { CommentCreateDTO } from "../types/Comment";
-import { useProjectId } from "../stores/projectIdStore";
 
 interface TaskDetailModalProps {
     taskId: number;
 }
 
-const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
+const TaskDetailModal = ({ taskId }: TaskDetailModalProps) => {
 
     const user = useUser();
-    const projectId = useProjectId();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [commentData, setCommentData] = useState<CommentCreateDTO>({content: "", authorId: user.id, taskId: taskId})
@@ -38,7 +36,8 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
             return
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["task"] });
+            queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+            queryClient.invalidateQueries({ queryKey: ["project"]});
             console.log("succesfully deleted task")
             setShowTaskDetailModal(false)
         }
@@ -54,11 +53,12 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
             return
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["comment"] });
-            console.log("succesfully deleted task")
-            setShowTaskDetailModal(false)
+            queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+            queryClient.invalidateQueries({queryKey: ["project"]})
+            console.log("succesfully deleted comment")
+            // setShowTaskDetailModal(false)
         }
-    }); 
+    });
 
     const createComment = useMutation({
         mutationFn: async (commentCreateData: CommentCreateDTO) => {
@@ -71,9 +71,9 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
             return
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ["task", taskId]});
-            queryClient.invalidateQueries({queryKey: ["project", projectId]})
-            setCommentData({content: "", authorId: user.id, taskId: taskId})
+            queryClient.invalidateQueries({ queryKey: ["task", taskId] });
+            queryClient.invalidateQueries({queryKey: ["project"]})
+            setCommentData({ content: "", authorId: user.id, taskId: taskId })
             console.log("comment placed")
         }
     })
@@ -108,7 +108,7 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
         },
     })
 
-         const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setCommentData({ ...commentData, [name]: value });
     }
@@ -166,8 +166,8 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
                     </Card>
                     <Card>
                         <Row>
-                            <TaskEditModal taskData={task}/>
-                            {account.role !== "CUSTOMER" && <button onClick={() => deleteTask.mutate()}>Delete task</button>}    
+                            <TaskEditModal taskData={task} />
+                            {account.role !== "CUSTOMER" && <button onClick={() => deleteTask.mutate()}>Delete task</button>}
                         </Row>
                     </Card>
                     <Card>
@@ -183,8 +183,8 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
                     <Card>
                         <h4>comments</h4>
                         <form onSubmit={handleSubmit}>
-                        <textarea id="content" name="content" value={commentData.content} onChange={handleChange} />
-                        <button className="placeComment" type="submit">Place comment</button>
+                            <textarea id="content" name="content" value={commentData.content} onChange={handleChange} />
+                            <button className="placeComment" type="submit">Place comment</button>
                         </form>
                         <br/>
                         {task.comments.map((comment) => (
