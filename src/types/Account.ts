@@ -3,16 +3,16 @@ import type { ProjectShortDTO } from "./Project";
 import type { TaskShortDTO } from "./Task";
 
 export interface AccountCreateDTO {
-    email: string;
-    name: string;
+  name: string;
+  email: string;
     password: string;
     role: string
 }
 
 export interface AccountDTO {
     id: number;
-    email: string;
     name: string;
+    email: string;
     role: string;
     madeComments: CommentShortDTO[];
     madeTasks: TaskShortDTO[];
@@ -20,8 +20,8 @@ export interface AccountDTO {
 }
 
 export interface AccountEditDTO{
-    email: string;
-    name: string;
+  name: string;
+  email: string;
     password: string;
 }
 
@@ -36,8 +36,8 @@ export interface AccountPasswordDTO {
 
 export interface AccountShortDTO {
   id: number;
-  email: string;
   name: string;
+  email: string;
   role: string;
 }
 export interface AccountNameDTO {
