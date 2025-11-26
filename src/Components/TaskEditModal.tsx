@@ -78,7 +78,7 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
                             <textarea id="content" name="content" value={taskEditData.content} onChange={handleChange} />
                         </div>
                         <div>
-                            <label htmlFor="status"> Role: </label>
+                            <label htmlFor="status"> status: </label>
                             <select id="status" name="status" value={taskEditData.status} onChange={handleChange}>
                                 <option value="PENDING">Pending</option>
                                 <option value="IN_PROGRESS">In Progress</option>

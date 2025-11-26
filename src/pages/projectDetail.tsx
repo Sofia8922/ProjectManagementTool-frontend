@@ -73,7 +73,7 @@ const ProjectDetail = () => {
                             project title
                             <h2>{project.name}</h2>
                             Tasks completed
-                            <h2><ProgressCalculator id={project.id} /></h2>
+                            <h4><ProgressCalculator id={project.id} /></h4>
                             <EditProjectModal project = {project} />
                             project description
                             <h2>{project.description}</h2>
@@ -97,7 +97,7 @@ const ProjectDetail = () => {
                                 <Card>
                                     <Row className="justify-content-flex-row">
                                         <NewTaskModal />
-                                        <ManageLabelsModal />
+                                        {/* <ManageLabelsModal /> */}
                                     </Row>
                                 </Card>
                             </Card>
@@ -120,7 +120,6 @@ const ProjectDetail = () => {
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==scrapped} + onclick setTaskId*/}
                                 {/* task.name + task.content task.assignedDeveloper task.tags */}
-                                {/* <TaskDetailModal /> */}
                             </Card>
                         </Card>
                     </div>
@@ -136,20 +135,21 @@ const ProjectDetail = () => {
 
                             <div>
                                 <h4>dev team</h4>
-                                {project.developers.map(developer => (
-                                    <li key={developer.id}>
+                                {project.projectDevelopers.length !==0 ? <>{project.projectDevelopers.map(developer => (
+                                    <div key={developer.id}>
                                         {developer.name}
-                                    </li>
-                                ))}
+                                    </div>
+                                ))}</>: "no developers"}
                                 {/* {map project.accounts if role==DEVELOPER */}
                             </div>
                             <div>
                                 <h4>customers</h4>
-                                {project.customers.map(customer => (
-                                    <li key={customer.id}>
+                                {project.projectCustomers.length !==0 ? <>
+                                {project.projectCustomers.map(customer => (
+                                    <div key={customer.id}>
                                         {customer.name}
-                                    </li>
-                                ))}
+                                    </div>
+                                ))}</>: "no customers" }
                                 {/* {map project.accounts if role==CUSTOMER */}
                             </div>
                         </div>
