@@ -1,44 +1,352 @@
-import { Button, Form } from "react-bootstrap"
+import { Button, Card, Col, Form, Row } from "react-bootstrap"
+import Dropdown from 'react-bootstrap/Dropdown';
 import CustomModal from "./CustomModal"
 import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { ProjectEditDTO } from "../types/Project";
+import { API_URL } from "../App";
+import { useUser } from "../stores/userStore";
+import type { AccountNameDTO, AccountShortDTO } from "../types/Account";
+import { useProjectId } from "../stores/projectIdStore";
 
 
-const EditProjectModal = () => {
+const EditProjectModal = ({ project }) => {
 
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+    const user = useUser();
+    const [formData, setFormData] = useState({ name: '', description: '', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
+    const [errorMessage, setErrorMessage] = useState('')
+    const [newDevelopers, setNewDevelopers] = useState<AccountShortDTO[]>([]);
+    const [oldDevelopers, setOldDevelopers] = useState<AccountShortDTO[]>([]);
+    const [newCustomers, setNewCustomers] = useState<AccountShortDTO[]>([]);
+    const [oldCustomers, setOldCustomers] = useState<AccountShortDTO[]>([]);
+    const [ scrappedStatus, setScrappedStatus] = useState(false);
 
-    const handleSubmitEditProject = () => {
+    const queryClient = useQueryClient()
+
+    const editProject = useMutation({
+        mutationFn: async (editData: ProjectEditDTO) => {
+            const response = await fetch(`${API_URL}/${user.id}/projects/${project.id}`,
+                {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(editData)
+                });
+            if (!response) throw new Error("Failed to edit project.")
+            else console.log("Project edit request succesfully sent!")
+            return response.json();
+        },
+        onSuccess: (response) => {
+            console.log(JSON.stringify(formData))
+            if (response.message !== undefined) {
+                setErrorMessage(response.message)
+                console.log(errorMessage)
+                console.log(response.message)
+            } else {
+                console.log(response)
+                setFormData({ name: '', description: '', scrappedStatus: false, projectDevelopers: new Array<AccountShortDTO>(), projectCustomers: new Array<AccountShortDTO>() })
+                queryClient.invalidateQueries({ queryKey: ['project'] })
+                setShowEditProjectModal(false)
+            }
+        },
+        onError: () => {
+            console.log("Something went wrong.")
+        }
+    })
+
+    const handleSubmitEditProject = (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+
         console.log("handled submit Edit Project")
-    };
+        accountArrays();
+        
+        setFormData({
+            ...formData, 
+            scrappedStatus: scrappedStatus, developers: project.developers, customers: project.customers
+    })
 
+        console.log(formData)
+        // console.log(useProjectId)
+        console.log(project.id)
+        console.log(user.id)
+        editProject.mutate(formData)
+    }
 
-    return (
-        <p>
-            <Button as="input" variant="primary" value={"Edit project"} onClick={() => setShowEditProjectModal(true)} />
+        console.log(formData)
+        
+    const {
+        data: accounts,
+        isLoading: isAccountLoading,
+        error: accountError
+    } = useQuery({
+        queryKey: ["accounts"],
+        queryFn: async () => {
+            const response = await fetch(`${API_URL}/${user.id}/accounts`);
+            if (!response.ok) {
+                throw new Error("accounts error")
+            }
+            return response.json();
+        },
+    })
 
-            <CustomModal title="hoi ik ben een modal" handleSubmit={handleSubmitEditProject} show={showEditProjectModal} setShow={setShowEditProjectModal} >
-                <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
-                        <Form.Text className="text-muted">
-                            We'll never share your email with anyone else.
-                        </Form.Text>
-                    </Form.Group>
+    if (isAccountLoading) {
+        return <p>accounts loading</p>
+    }
+    if (accountError) {
+        return <p>account error</p>
+    }
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Check me out" />
-                    </Form.Group>
-                </Form>
-            </CustomModal>
-        </p>
+    // patricks handle change methode
+    const handleChangeBootstrap = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // console.log(event.target)
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value })
+        // console.log(formData)
+    }
 
+    const accountArrays = ()=>{
+        // verwijdert alle devs die verwijderd moeten worden van het project
+        project.developers.filter(item => 
+            !idsRemoveDevs.includes(item.id)
+        )
+        // voegt alle nieuwe devs toe aan het project
+        newDevelopers.map(dev=>(
+            project.developers.push(dev)
+        ))
+
+        // verwijdert alle customers die verwijderd moeten worden van het project
+        project.customers.filter(item => 
+            !idsRemoveClient.includes(item.id)
+        )
+        // voegt alle nieuwe customers toe aan het project
+        newCustomers.map(client=>(
+            project.customers.push(client)
+        ))
+    }
+
+    const idsAddDevs = project.developers.map(item=> item.id)
+    const moreIdsAddDevs = newDevelopers.map(item=> item.id)
+    const idsRemoveDevs = oldDevelopers.map(item=> item.id)
+
+    const idsAddClient = project.customers.map(item=> item.id)
+    const moreIdsAddClient = newCustomers.map(item=> item.id)
+    const idsRemoveClient = oldCustomers.map(item=> item.id)
+
+    const developerAccounts = accounts.filter(item =>
+        item.role === 'DEVELOPER' && !idsAddDevs.includes(item.id) && !moreIdsAddDevs.includes(item.id)
     )
 
+    const projectDeveloperAccounts = project.developers.filter(item =>
+        item.role === "DEVELOPER" && !idsRemoveDevs.includes(item.id)
+    )
+
+    const customerAccounts = accounts.filter(item =>
+        item.role === 'CUSTOMER' && !idsAddClient.includes(item.id) && !moreIdsAddClient.includes(item.id)
+    )
+
+    const projectCustomerAccounts = project.customers.filter(item =>
+        item.role === "CUSTOMER" && !idsRemoveClient.includes(item.id)
+    )
+    
+    // const customerAccounts = accounts.filter(item =>
+    //     item.role === 'CUSTOMER');
+
+    const addDeveloper = (developer) => {
+        console.log("adding developer") 
+        setNewDevelopers([
+            ...newDevelopers,
+            { id: developer.id, name: developer.name, email: developer.email, role:developer.role }
+        ])
+    }
+
+    const removeDeveloper = (developer) => {
+        console.log("removing developer")
+        setOldDevelopers([
+            ...oldDevelopers,
+            { id: developer.id, name: developer.name, email: developer.email, role:developer.role }
+        ]);
+    }
+
+        const addCustomer = (customer) => {
+        console.log("adding customer")
+        setNewCustomers([
+            ...newCustomers,
+            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
+        ]);
+    }
+
+    const removeCustomer = (customer) => {
+        console.log("removing customer")
+        setOldCustomers([
+            ...oldCustomers,
+            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
+        ]);
+    }
+
+    const removeNewDev = (developer) => {
+        developerAccounts.push(developer)
+        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
+    }
+
+    const removeNewClient = (customer) => {
+        customerAccounts.push(customer)
+        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
+    }
+
+    const resetRemovedDev = (developer) => {
+        projectDeveloperAccounts.push(developer)
+        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
+    }
+
+    const resetRemovedClient = (customer) => {
+        projectCustomerAccounts.push(customer)
+        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
+    }
+
+    const changeScrappedStatus = ()=>{
+        if (scrappedStatus == false){setScrappedStatus(true)}
+        else {setScrappedStatus(false)}
+    }
+
+    // checks returnen yes als ze aangevinkt zijn en niets als ze niet aangevinkt zijn dus daar moet ik nog ff mee dealen met bv een ternary
+    // https://stackoverflow.com/questions/77319339/return-boolean-value-from-checkbox-on-html-form
+    // deze site laat zien hoe je door de formdata heen loopt en dit soort dingen met if statements aan kunt passen naar de juiste waardes
+    // er staan 2 voorbeelden op de site maar de eerste vind ik het duidelijkst en ik denk dat ik toch nog door de form data heen moet loopen om de data op te schonen voor de devs en clients
+
+    return (
+        <>
+            <Button as="input" variant="primary" value={"Edit project"} onClick={() => setShowEditProjectModal(true)} />
+
+            <CustomModal title={project.name} handleSubmit={()=>handleSubmitEditProject} show={showEditProjectModal} setShow={setShowEditProjectModal}>
+                <Form onSubmit={handleSubmitEditProject}>
+                    <Row>
+                        <Col>
+                            <Form.Group className="mb-3" controlId="formBasicName">
+                                <Form.Label>Project name</Form.Label>
+                                <Form.Control name="name" type="text" placeholder={project.name} defaultValue={project.name} onChange={handleChangeBootstrap} />
+                                <Form.Text className="text-muted">
+                                </Form.Text>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                <Form.Check name="scrappedStatus" type="checkbox" label="projectScrapped" onChange={changeScrappedStatus} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                        <Form.Label>Project description</Form.Label>
+                        <Form.Control name="description" type="text" as="textarea" rows={3} placeholder={project.description} defaultValue={project.description} onChange={handleChangeBootstrap}/>
+                    </Form.Group>
+
+                    <Card>
+                        <Row>
+                            <Card style={{ width: "50%" }}>
+                                <Col>
+                                    <h6>Add developers</h6>
+                                    <Dropdown className="d-inline mx-2" autoClose="outside">
+                                        <Dropdown.Toggle id="add developers">
+                                            add developers
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {developerAccounts.map(developer => (
+                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => addDeveloper(developer)}> {developer.name}</Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                    <br />
+
+                                    <br />
+                                    <h6>Developers to be added to the team</h6>
+
+                                            {/* deze buttons naar een methode laten verwijzen die newDevelopers array aanpast en developerAccounts array aanpast */}
+                                    <div>{newDevelopers.map(developer => (
+                                        <input key={developer.id} type="button" onClick={()=>removeNewDev(developer)} value={developer.name}></input>
+                                    ))}</div>
+                                    <br />
+
+
+                                    <h6>Remove developers</h6>
+                                    <Dropdown className="remove developers" autoClose="outside">
+                                        <Dropdown.Toggle id="remove developers">
+                                            remove developers
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {projectDeveloperAccounts.map(developer =>(
+                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => removeDeveloper(developer)}>{developer.name}</Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                    
+                                    <br />
+                                    <h6>Developers to be removed from the team</h6>
+                                    <div>{oldDevelopers.map(developer => (
+                                        <input key={developer.id} type="button" onClick={()=> resetRemovedDev(developer)} value={developer.name}></input>
+                                    ))}</div>
+                                    <br />
+                                </Col>
+                            </Card>
+
+
+
+                            
+                            <Card style={{ width: "50%" }}>
+                                <Col>
+                                    <h6>Add customers</h6>
+                                    <Dropdown className="d-inline mx-2" autoClose="outside">
+                                        <Dropdown.Toggle id="add customers">
+                                            add customers
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {customerAccounts.map(customer => (
+                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => addCustomer(customer)}> {customer.name}</Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                    <br />
+
+                                    <br />
+                                    <h6>Customers to be added to the team</h6>
+                                    <div>{newCustomers.map(customer => (
+                                        <input key={customer.id} type="button" onClick={()=> removeNewClient(customer)} value={customer.name}></input>
+                                    ))}</div>
+                                    <br />
+
+                                    <h6>Remove customers</h6>
+                                    <Dropdown className="remove customers" autoClose="outside">
+                                        <Dropdown.Toggle id="remove customers">
+                                            Remove customers
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            {projectCustomerAccounts.map(customer =>(
+                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => removeCustomer(customer)}>{customer.name}</Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                    
+                                    <br />
+                                    <h6>Customers to be removed from the team</h6>
+                                    <div>{oldCustomers.map(customer => (
+                                        <input key={customer.id} type="button" onClick={()=>resetRemovedClient(customer)} value={customer.name}></input>
+                                    ))}</div>
+
+
+
+                                    <br />
+                                </Col>
+                            </Card>
+                        </Row>
+                    </Card>
+                    <Button type="submit" variant="primary" value="Confirm"
+                    //  onClick={() => { 
+                    //              handleSubmitEditProject()
+                    //             //  setShow(false) //Patrick: Do not hide automatically, wait until there's no errors
+                    //             }} 
+                    />
+                </Form>
+            </CustomModal >
+        </>
+    )
 }
 export default EditProjectModal
-

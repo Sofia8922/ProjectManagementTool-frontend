@@ -40,3 +40,7 @@ export interface  AccountShortDTO {
   name: string;
   role: string;
 }
+export interface AccountNameDTO {
+  id:number;
+  name:string;
+}
