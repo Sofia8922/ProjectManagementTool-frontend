@@ -55,7 +55,6 @@ const EditProjectModal = ({ project }) => {
         event.preventDefault();
 
         console.log("handled submit Edit Project")
-        accountArrays();
         
         await setFormData({
             ...formData, 
@@ -153,7 +152,7 @@ const EditProjectModal = ({ project }) => {
 
 
 
-    
+
         const addCustomer = (customer) => {
         console.log("adding customer")
         setNewCustomers([
