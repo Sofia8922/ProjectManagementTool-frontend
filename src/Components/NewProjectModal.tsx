@@ -1,6 +1,6 @@
-import { Button, Form } from "react-bootstrap"
+import { Button } from "react-bootstrap"
 import CustomModal from "./CustomModal"
-import { useState, type ChangeEventHandler, type FormEventHandler } from "react";
+import { useState } from "react";
 import { useUser } from "../stores/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_URL } from "../App";
@@ -32,7 +32,7 @@ const NewProjectModal = () => {
             } else {
             console.log(response)
             setFormData({ name: '', description: '', creatorId:user.id})
-            queryClient.invalidateQueries({queryKey: ['account']})
+            queryClient.invalidateQueries({queryKey: ["account"]})
             setShowNewProjectModal(false)
             }
         },

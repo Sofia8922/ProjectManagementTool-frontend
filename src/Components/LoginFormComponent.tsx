@@ -35,7 +35,7 @@ const LoginFormComponent = () => {
           }
         },
         onError: () => {
-            console.log("can't find backend")
+            console.log("Something went wrong.")
         }
     })
 
