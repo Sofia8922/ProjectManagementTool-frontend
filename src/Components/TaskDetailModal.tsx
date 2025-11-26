@@ -141,7 +141,7 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
     if (task !== undefined && account !== undefined) {
         return (
             <>
-                <Button as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
+                <Button style={{width: "90%"}} as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
                 <CustomModal title="Task details" handleSubmit={handleSubmitTaskDetailModal} show={showTaskDetailModal} setShow={setShowTaskDetailModal} >
                     <Card>
                         <Col>

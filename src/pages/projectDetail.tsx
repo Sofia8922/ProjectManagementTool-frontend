@@ -70,13 +70,12 @@ const ProjectDetail = () => {
                 <Col>
                     <Card>
                         <div>
-                            project title
+                            <h5>project title:</h5>
                             <h2>{project.name}</h2>
-                            Tasks completed
                             <h4><ProgressCalculator id={project.id} /></h4>
+                            <h5>project description:</h5>
+                            <h4>{project.description}</h4>
                             <EditProjectModal project = {project} />
-                            project description
-                            <h2>{project.description}</h2>
                         </div>
                     </Card>
                     <div>
@@ -130,9 +129,13 @@ const ProjectDetail = () => {
                             <h4>logged in as:</h4>
                             <h2>{user.name}</h2>
                             <button onClick={() => logout()}>logout</button>
+                            <br/>
+                            
+                            <hr/>
+
                             <h4>project owner</h4>
                             {project.projectCreator.name}
-
+                                <hr/>
                             <div>
                                 <h4>dev team</h4>
                                 {project.projectDevelopers.length !==0 ? <>{project.projectDevelopers.map(developer => (
@@ -142,6 +145,7 @@ const ProjectDetail = () => {
                                 ))}</>: "no developers"}
                                 {/* {map project.accounts if role==DEVELOPER */}
                             </div>
+                                <hr/>
                             <div>
                                 <h4>customers</h4>
                                 {project.projectCustomers.length !==0 ? <>

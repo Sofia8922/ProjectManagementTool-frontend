@@ -68,8 +68,8 @@ const ProjectOverview = () => {
                     </Col>
                 </Col>
             </Card>
-            <Card>
-                <div>
+            <Card style={{height: "100%"}}>
+                <div style={{width: "100%"}}>
                     <h4>Ongoing projects</h4>
                     {account.madeProjects && account.madeProjects.length > 0 ? (
                         <>
