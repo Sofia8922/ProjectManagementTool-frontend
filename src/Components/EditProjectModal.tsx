@@ -158,6 +158,32 @@ const EditProjectModal = ({ project }) => {
 
     const removeCustomer = (customer) => {
         console.log("removing customer")
+// remove comments if needed
+//        
+//        setOldCustomers([
+//            ...oldCustomers,
+//            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
+//        ]);
+//    }
+//
+//    const removeNewDev = (developer) => {
+//        developerAccounts.push(developer)
+//        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
+//    }
+//
+//    const removeNewClient = (customer) => {
+//        customerAccounts.push(customer)
+//        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
+//    }
+//
+//    const resetRemovedDev = (developer) => {
+//        projectDeveloperAccounts.push(developer)
+//        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
+//    }
+//
+//    const resetRemovedClient = (customer) => {
+//        projectCustomerAccounts.push(customer)
+//        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
         const clients = formData.projectCustomers.filter( item => item.id !== customer.id)
         setFormData({
             ...formData,

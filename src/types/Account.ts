@@ -34,7 +34,7 @@ export interface AccountPasswordDTO {
   password: string;
 }
 
-export interface  AccountShortDTO {
+export interface AccountShortDTO {
   id: number;
   name: string;
   email: string;
