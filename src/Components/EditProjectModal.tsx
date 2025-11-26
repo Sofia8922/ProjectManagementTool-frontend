@@ -12,13 +12,11 @@ import type {  AccountShortDTO } from "../types/Account";
 const EditProjectModal = ({ project }) => {
 
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
-    const user = useUser();
     const [formData, setFormData] = useState({ name: project.name, description: project.description, scrappedStatus: false, projectDevelopers: project.projectDevelopers, projectCustomers: project.projectCustomers })
     const [errorMessage, setErrorMessage] = useState('')
-    const [newCustomers, setNewCustomers] = useState<AccountShortDTO[]>([]);
-    const [oldCustomers, setOldCustomers] = useState<AccountShortDTO[]>([]);
-    const [ scrappedStatus, setScrappedStatus] = useState(false);
-
+    const [ scrappedStatus, setScrappedStatus] = useState(project.scrappedStatus);
+    
+    const user = useUser();
     const queryClient = useQueryClient()
 
     const editProject = useMutation({
@@ -70,8 +68,8 @@ const EditProjectModal = ({ project }) => {
 
         console.log("formdata")
         console.log(formData)
-        console.log("project Developers")
-        console.log(formData.projectDevelopers)
+        console.log("project Customers")
+        console.log(formData.projectCustomers)
         
     const {
         data: accounts,
@@ -107,9 +105,8 @@ const EditProjectModal = ({ project }) => {
     //filters op basis van ID
     const idsAddDevs = formData.projectDevelopers.map(item=> item.id)
 
-    const idsAddClient = project.projectCustomers.map(item=> item.id)
-    const moreIdsAddClient = newCustomers.map(item=> item.id)
-    const idsRemoveClient = oldCustomers.map(item=> item.id)
+    const idsAddClient = formData.projectCustomers.map(item=> item.id)
+
 
     //alle developers in de app
     let developerAccounts = accounts.filter(item =>
@@ -120,14 +117,12 @@ const EditProjectModal = ({ project }) => {
     let projectDeveloperAccounts = formData.projectDevelopers
 
     // alle customers in de app
-    const customerAccounts = accounts.filter(item =>
-        item.role === 'CUSTOMER' && !idsAddClient.includes(item.id) && !moreIdsAddClient.includes(item.id)
+    let customerAccounts = accounts.filter(item =>
+        item.role === 'CUSTOMER' && !idsAddClient.includes(item.id)
     )
 
     // alle customers in het project
-    const projectCustomerAccounts = project.projectCustomers.filter(item =>
-        item.role === "CUSTOMER" && !idsRemoveClient.includes(item.id)
-    )
+    let projectCustomerAccounts = formData.projectCustomers
     
 
     const addDeveloper = (developer) => {
@@ -137,7 +132,7 @@ const EditProjectModal = ({ project }) => {
             ...formData, 
             projectDevelopers: devs
     })
-    projectDeveloperAccounts = [...projectDeveloperAccounts, newDevelopers ]
+    projectDeveloperAccounts = [...projectDeveloperAccounts, developer ]
     }
 
     const removeDeveloper = (developer) => {
@@ -151,42 +146,50 @@ const EditProjectModal = ({ project }) => {
     }
 
 
-
-
-        const addCustomer = (customer) => {
+    const addCustomer = (customer) => {
         console.log("adding customer")
-        setNewCustomers([
-            ...newCustomers,
-            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
-        ]);
+        const clients = [formData.projectCustomers, customer]
+        setFormData({
+            ...formData,
+            projectCustomers: clients
+        })
+        projectCustomerAccounts = [... projectCustomerAccounts, customer]
     }
 
     const removeCustomer = (customer) => {
         console.log("removing customer")
-        setOldCustomers([
-            ...oldCustomers,
-            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
-        ]);
-    }
-
-    const removeNewDev = (developer) => {
-        developerAccounts.push(developer)
-        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
-    }
-
-    const removeNewClient = (customer) => {
-        customerAccounts.push(customer)
-        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
-    }
-
-    const resetRemovedDev = (developer) => {
-        projectDeveloperAccounts.push(developer)
-        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
-    }
-
-    const resetRemovedClient = (customer) => {
-        projectCustomerAccounts.push(customer)
-        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
+// remove comments if needed
+//        
+//        setOldCustomers([
+//            ...oldCustomers,
+//            { id: customer.id, name: customer.name, email: customer.email, role:customer.role }
+//        ]);
+//    }
+//
+//    const removeNewDev = (developer) => {
+//        developerAccounts.push(developer)
+//        setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
+//    }
+//
+//    const removeNewClient = (customer) => {
+//        customerAccounts.push(customer)
+//        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
+//    }
+//
+//    const resetRemovedDev = (developer) => {
+//        projectDeveloperAccounts.push(developer)
+//        setOldDevelopers(oldDevs => oldDevs.filter(oldDev => oldDev.id !== developer.id))
+//    }
+//
+//    const resetRemovedClient = (customer) => {
+//        projectCustomerAccounts.push(customer)
+//        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
+        const clients = formData.projectCustomers.filter( item => item.id !== customer.id)
+        setFormData({
+            ...formData,
+            projectCustomers: clients
+        })
+        customerAccounts = [... customerAccounts, customer]
     }
 
     const changeScrappedStatus = ()=>{
@@ -248,7 +251,7 @@ const EditProjectModal = ({ project }) => {
                                     <div>
                                         <br/>
                                         {projectDeveloperAccounts.map(developer=>(
-                                            <input key={developer.id} type="button" onClick={()=> removeDeveloper(developer)} value={developer.name} ></input>
+                                            <input key={developer.id} type="button"  onClick={()=> removeDeveloper(developer)} value={developer.name} ></input>
                                         ))}
                                     </div>
 
@@ -292,13 +295,14 @@ const EditProjectModal = ({ project }) => {
                                     </Dropdown>
                                     <br />
 
+
                                     <br />
-                                    <h6>Customers to be added to the team</h6>
-                                    <div>{newCustomers.map(customer => (
-                                        <input key={customer.id} type="button" onClick={()=> removeNewClient(customer)} value={customer.name}></input>
+                                    <h6>Project customers</h6>
+                                    <div>{projectCustomerAccounts.map(customer => (
+                                        <input key={customer.id} type="button" onClick={()=> removeCustomer(customer)} value={customer.name}></input>
                                     ))}</div>
                                     <br />
-
+{/* 
                                     <h6>Remove customers</h6>
                                     <Dropdown className="remove customers" autoClose="outside">
                                         <Dropdown.Toggle id="remove customers">
@@ -315,7 +319,7 @@ const EditProjectModal = ({ project }) => {
                                     <h6>Customers to be removed from the team</h6>
                                     <div>{oldCustomers.map(customer => (
                                         <input key={customer.id} type="button" onClick={()=>resetRemovedClient(customer)} value={customer.name}></input>
-                                    ))}</div>
+                                    ))}</div> */}
 
 
 
