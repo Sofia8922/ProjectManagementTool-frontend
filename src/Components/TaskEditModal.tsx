@@ -125,6 +125,26 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
         setDevTeam(tempDevTeam)
     }
 
+    const addDeveloper = (developer) => {
+        console.log("adding developer")
+        const devs = [...taskEditData.assignedDevelopers, developer];
+        setTaskEditData({
+            ...taskEditData, 
+            assignedDevelopers: devs
+    })
+    //projectDeveloperAccounts = [...projectDeveloperAccounts, newDevelopers ]
+    }
+
+    const removeDeveloper = (developer) => {
+        console.log("removing developer")
+        const devs = taskEditData.assignedDevelopers.filter(item => item.id !== developer.id)
+        setTaskEditData({
+            ...taskEditData, 
+            assignedDevelopers: devs
+    })
+    //developerAccounts = [... developerAccounts, developer]
+    }
+
     return (
         <>
             <Button as="input" variant="primary" value={"Edit task"} onClick={() => openTaskEditModal()} />
@@ -164,14 +184,14 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     {projectData !==undefined && projectData.projectDevelopers.map(developer => (
-                                        <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => addToDevTeam(developer)}>{developer.name}</Dropdown.Item>
+                                        <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => addDeveloper(developer)}>{developer.name}</Dropdown.Item>
                                     ))}
                                 </Dropdown.Menu>
                             </Dropdown>
                             <br />
                             <h6>Developers on the team</h6>
                             <div>{tempDevTeam.map(developer => (
-                                <input key={developer.id} type="button" onClick={() => removeFromDevTeam(developer)} value={developer.name}></input>
+                                <input key={developer.id} type="button" onClick={() => removeDeveloper(developer)} value={developer.name}></input>
                             ))}</div>
                             </Card>
                             <br />

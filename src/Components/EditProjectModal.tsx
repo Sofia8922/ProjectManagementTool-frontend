@@ -169,21 +169,6 @@ const EditProjectModal = ({ project }) => {
         ]);
     }
 
-    const removeNewClient = (customer) => {
-        customerAccounts.push(customer)
-        setNewCustomers(newClients => newClients.filter(client => client.id !== customer.id))
-    }
-
-    const resetRemovedClient = (customer) => {
-        projectCustomerAccounts.push(customer)
-        setOldCustomers(oldClients => oldClients.filter(oldClient => oldClient.id !== customer.id))
-    }
-
-    const changeScrappedStatus = ()=>{
-        if (scrappedStatus == false){setScrappedStatus(true)}
-        else {setScrappedStatus(false)}
-    }
-
     const removeNewDev = (developer) => {
         developerAccounts.push(developer)
         setNewDevelopers(newDevs => newDevs.filter(dev => dev.id !== developer.id))
