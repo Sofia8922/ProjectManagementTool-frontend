@@ -2,7 +2,7 @@ import { Button, Card, Col, Row } from "react-bootstrap"
 import CustomModal from "./CustomModal"
 import { Fragment, useState } from "react";
 import TaskEditModal from "./TaskEditModal";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API_URL } from "../App";
 import { useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
@@ -142,6 +142,8 @@ const TaskDetailModal = ({taskId}: TaskDetailModalProps) => {
         return (
             <>
                 <Button as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
+                    <button value={"Task Detail"} onClick={() => setShowTaskDetailModal(true)}/>
+                        <div/>
                 <CustomModal title="Task details" handleSubmit={handleSubmitTaskDetailModal} show={showTaskDetailModal} setShow={setShowTaskDetailModal} >
                     <Card>
                         <Col>

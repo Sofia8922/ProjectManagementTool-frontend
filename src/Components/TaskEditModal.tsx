@@ -7,7 +7,6 @@ import { useUser } from "../stores/userStore";
 import { type TaskEditDTO, type TaskDTO } from "../types/Task";
 import { type ProjectDTO } from "../types/Project";
 import { type AccountShortDTO } from "../types/Account";
-import { testValueType } from "motion";
 
 // taskData is de Task die meegegeven wordt
 
@@ -19,13 +18,13 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
 
     const user = useUser();
     const [showEditTaskModal, setShowEditTaskModal] = useState(false);
-    const [taskEditData, setTaskEditData] = useState<TaskEditDTO>({ name: '', content: '', status: taskData.status, assignedDevelopers: taskData.assignedDevelopers })
+    const [taskEditData, setTaskEditData] = useState<TaskEditDTO>({ name: taskData.name, content: taskData.content, status: taskData.status, assignedDevelopers: taskData.assignedDevelopers })
     const [projectData, setProjectData] = useState<ProjectDTO>()
-    const [devTeam, setDevTeam] = useState<AccountShortDTO[]>(taskData.assignedDevelopers)
     const queryClient = useQueryClient();
 
     const updateTask = useMutation({
         mutationFn: async (taskEditData: TaskEditDTO) => {
+            console.log("Sending the following data: ",taskEditData)
             const response = await fetch(`${API_URL}/${user.id}/tasks/${taskData.id}`,
                 {
                     method: 'PUT',
@@ -41,7 +40,7 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
                 console.log(response)
                 queryClient.invalidateQueries({ queryKey: ["task"] })
                 queryClient.invalidateQueries({ queryKey: ["project"] })
-                setTaskEditData({ ...taskEditData, name: '', content: '' })
+                queryClient.invalidateQueries({ queryKey: ["account"]})
                 setShowEditTaskModal(false)
             } else if (response.message !== undefined) {
                 console.log(response.message)
@@ -57,7 +56,7 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
             isLoading: isProjectLoading,
             error: accountError
         } = useQuery({
-            queryKey: ["projects"],
+            queryKey: ["project"],
             queryFn: async () => {
                 const response = await fetch(`${API_URL}/${user.id}/projects/${taskData.project.id}`);
                 if (!response.ok) {
@@ -92,12 +91,6 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
 
     const openTaskEditModal = () => {
         setShowEditTaskModal(true)
-        setTaskEditData({
-            name: taskData.name,
-            content: taskData.content,
-            status: taskData.status,
-            assignedDevelopers: taskData.assignedDevelopers
-        })
     }
 
 
@@ -109,41 +102,29 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
         console.log(taskEditData)
     }
 
-    const tempDevTeam:AccountShortDTO[] = devTeam
-
-    const addToDevTeam = (developer) => {
-        console.log(tempDevTeam)
-        tempDevTeam.push(developer)
-        setDevTeam(tempDevTeam)
-    }
-
-    const removeFromDevTeam = (developer) => {
-        const index = tempDevTeam.indexOf(developer)
-        console.log(index)
-        if (index > -1) {
-        tempDevTeam.splice(index)
-        setDevTeam(tempDevTeam)
-    }
-
     const addDeveloper = (developer) => {
-        console.log("adding developer")
+        console.log("adding developer ", developer)
         const devs = [...taskEditData.assignedDevelopers, developer];
+        console.log(devs)
         setTaskEditData({
             ...taskEditData, 
             assignedDevelopers: devs
     })
+    console.log(taskEditData.assignedDevelopers)
     //projectDeveloperAccounts = [...projectDeveloperAccounts, newDevelopers ]
     }
 
     const removeDeveloper = (developer) => {
-        console.log("removing developer")
+        console.log("removing developer ", developer )
         const devs = taskEditData.assignedDevelopers.filter(item => item.id !== developer.id)
         setTaskEditData({
             ...taskEditData, 
             assignedDevelopers: devs
     })
+    console.log(taskEditData.assignedDevelopers)
     //developerAccounts = [... developerAccounts, developer]
     }
+
 
     return (
         <>
@@ -176,7 +157,7 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
                             </select>
                         </div>
                         <div>
-                            <Card onChange={handleChangeBootstrap}>
+                            <Card>
                             <h6>Add new developers</h6>
                             <Dropdown className="addDevelopers" autoClose="outside">
                                 <Dropdown.Toggle id="addDevelopers">
@@ -190,7 +171,7 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
                             </Dropdown>
                             <br />
                             <h6>Developers on the team</h6>
-                            <div>{tempDevTeam.map(developer => (
+                            <div>{taskEditData.assignedDevelopers.map(developer => (
                                 <input key={developer.id} type="button" onClick={() => removeDeveloper(developer)} value={developer.name}></input>
                             ))}</div>
                             </Card>
@@ -202,7 +183,5 @@ const TaskEditModal = ({ taskData }: TaskEditModalProps) => {
         </>
 
     )
-
-}
 }
 export default TaskEditModal
