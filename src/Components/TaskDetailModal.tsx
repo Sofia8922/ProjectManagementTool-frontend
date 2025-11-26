@@ -18,8 +18,8 @@ const TaskDetailModal = ({ taskId }: TaskDetailModalProps) => {
 
     const user = useUser();
     const navigate = useNavigate();
-    const queryClient =  useQueryClient();
-    const [commentData, setCommentData] = useState<CommentCreateDTO>({ content: "", authorId: user.id, taskId: taskId })
+    const queryClient = useQueryClient();
+    const [commentData, setCommentData] = useState<CommentCreateDTO>({content: "", authorId: user.id, taskId: taskId})
     const [showTaskDetailModal, setShowTaskDetailModal] = useState(false);
     const handleSubmitTaskDetailModal = () => {
         console.log("handled submit")
@@ -141,7 +141,8 @@ const TaskDetailModal = ({ taskId }: TaskDetailModalProps) => {
     if (task !== undefined && account !== undefined) {
         return (
             <>
-                <Button as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
+                <Button style={{width: "90%"}} as="input" variant="primary" value={"task detail"} onClick={() => setShowTaskDetailModal(true)} />
+                        <div/>
                 <CustomModal title="Task details" handleSubmit={handleSubmitTaskDetailModal} show={showTaskDetailModal} setShow={setShowTaskDetailModal} >
                     <Card>
                         <Col>
@@ -170,18 +171,30 @@ const TaskDetailModal = ({ taskId }: TaskDetailModalProps) => {
                         </Row>
                     </Card>
                     <Card>
-                        comments
+                        <h5>Assigned developers:</h5>
+                        {task.assignedDevelopers.length !==0 ? (
+                            <>
+                        {task.assignedDevelopers.map((dev) =>(
+                            <p key={dev.id} >{dev.name}</p>
+                        ))} </>) : (<> no developers assigned</>)
+                        }
+                    </Card>
+
+                    <Card>
+                        <h4>comments</h4>
                         <form onSubmit={handleSubmit}>
                             <textarea id="content" name="content" value={commentData.content} onChange={handleChange} />
                             <button className="placeComment" type="submit">Place comment</button>
                         </form>
+                        <br/>
                         {task.comments.map((comment) => (
                             <Fragment key={comment.id}>
-                                <li>
-                                    <p>{comment.author.name}</p>
+                                <Card>
+                                    <p>Author: {comment.author.name}</p>
                                     <p>{comment.content}</p>
                                     {user.id === comment.author.id && <button onClick={() => deleteComment.mutate(comment.id)}>Delete comment</button>}
-                                </li>
+                                </Card>
+                                <br/>
                             </Fragment>
                         ))}
                     </Card>

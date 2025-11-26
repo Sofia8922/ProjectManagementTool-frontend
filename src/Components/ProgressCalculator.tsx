@@ -51,11 +51,13 @@ const ProgressCalculator = ({ id }: ProgressCalculatorProps) => {
         }
 
         return (
-            <>
+            <div style={{width:"50%", border:"1px solid black",  margin: "auto", borderRadius: "5px"}}>
                 <>progress: </>
-                <>{completed} / {completed + notCompleted} </>
-                <>{completed / (completed + notCompleted) * 100}%</>
-            </>
+                <br/>
+                <>{completed} / {completed + notCompleted} tasks completed</>
+                <br/>
+                <>{Math.round(completed / (completed + notCompleted) * 100)}% completed</>
+            </div>
         )
     }
 

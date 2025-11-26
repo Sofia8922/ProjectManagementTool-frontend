@@ -17,14 +17,16 @@ export interface ProjectDTO {
   finishedStatus: boolean;
   scrappedStatus: boolean;
   projectCreator: AccountShortDTO;
-  developers: AccountShortDTO[];
-  customers: AccountShortDTO[];
+  projectDevelopers: AccountShortDTO[];
+  projectCustomers: AccountShortDTO[];
 }
 
 export interface ProjectEditDTO {
   name: string;
   description: string;
   scrappedStatus: boolean;
+  projectDevelopers: AccountShortDTO[];
+  projectCustomers: AccountShortDTO[];
 }
 
 export interface ProjectShortDTO {
