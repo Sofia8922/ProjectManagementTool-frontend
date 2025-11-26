@@ -225,34 +225,11 @@ const EditProjectModal = ({ project }) => {
                                     <div>
                                         <br/>
                                         {projectDeveloperAccounts.map(developer=>(
-                                            <input key={developer.id} type="button"  onClick={()=> removeDeveloper(developer)} value={developer.name} ></input>
+                                            <input key={developer.id} type="button" onClick={()=> removeDeveloper(developer)} value={developer.name} ></input>
                                         ))}
                                     </div>
-
-
-                                    {/* <h6>Remove developers</h6>
-                                    <Dropdown className="remove developers" autoClose="outside">
-                                        <Dropdown.Toggle id="remove developers">
-                                            remove developers
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            {projectDeveloperAccounts.map(developer =>(
-                                                <Dropdown.Item as="button" type="button" key={developer.id} onClick={() => removeDeveloper(developer)}>{developer.name}</Dropdown.Item>
-                                            ))}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                    
-                                    <br />
-                                    <h6>Developers to be removed from the team</h6>
-                                    <div>{oldDevelopers.map(developer => (
-                                        <input key={developer.id} type="button" onClick={()=> resetRemovedDev(developer)} value={developer.name}></input>
-                                    ))}</div>
-                                    <br /> */}
                                 </Col>
                             </Card>
-
-
-
                             
                             <Card style={{ width: "50%" }}>
                                 <Col>
@@ -272,31 +249,11 @@ const EditProjectModal = ({ project }) => {
 
                                     <br />
                                     <h6>Project customers</h6>
-                                    <div>{projectCustomerAccounts.map(customer => (
-                                        <input key={customer.id} type="button" onClick={()=> removeCustomer(customer)} value={customer.name}></input>
+                                    <div>
+                                        <br/>
+                                        {projectCustomerAccounts.map(customer => (
+                                            <input key={customer.id} type="button" onClick={()=> removeCustomer(customer)} value={customer.name}></input>
                                     ))}</div>
-                                    <br />
-{/* 
-                                    <h6>Remove customers</h6>
-                                    <Dropdown className="remove customers" autoClose="outside">
-                                        <Dropdown.Toggle id="remove customers">
-                                            Remove customers
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            {projectCustomerAccounts.map(customer =>(
-                                                <Dropdown.Item as="button" type="button" key={customer.id} onClick={() => removeCustomer(customer)}>{customer.name}</Dropdown.Item>
-                                            ))}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                    
-                                    <br />
-                                    <h6>Customers to be removed from the team</h6>
-                                    <div>{oldCustomers.map(customer => (
-                                        <input key={customer.id} type="button" onClick={()=>resetRemovedClient(customer)} value={customer.name}></input>
-                                    ))}</div> */}
-
-
-
                                     <br />
                                 </Col>
                             </Card>
@@ -307,7 +264,7 @@ const EditProjectModal = ({ project }) => {
                     //              handleSubmitEditProject()
                     //             //  setShow(false) //Patrick: Do not hide automatically, wait until there's no errors
                     //             }} 
-                    />
+                    >Confirm</Button>
                 </Form>
             </CustomModal >
         </>
