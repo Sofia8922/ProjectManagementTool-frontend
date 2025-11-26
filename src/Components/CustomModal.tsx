@@ -17,6 +17,7 @@ const CustomModal = ({ title, children, handleSubmit, show , setShow }: modalPro
                 show={show}
                 backdrop="static"
                 keyboard={false}
+                style={{ width: "100%"}}
             >
                 <Modal.Header>
                     <Modal.Title>{title}</Modal.Title>
@@ -34,10 +35,10 @@ const CustomModal = ({ title, children, handleSubmit, show , setShow }: modalPro
                     <Button as="input" variant="secondary" value="Return" onClick={()=>setShow(false)}>
                         
                     </Button>
-                    <Button as="input" variant="primary" value="Confirm" onClick={() => { 
+                    {/* <Button as="input" variant="primary" value="Confirm" onClick={() => { 
                                  handleSubmit()
-                                 // setShow(false) Patrick: Do not hide automatically, wait until there's no errors
-                                 }} />
+                                //  setShow(false) //Patrick: Do not hide automatically, wait until there's no errors
+                                 }} /> */}
                 </Modal.Footer>
             </Modal>
         </>

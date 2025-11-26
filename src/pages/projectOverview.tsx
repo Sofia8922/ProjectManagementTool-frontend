@@ -6,6 +6,7 @@ import { logout, useUser } from "../stores/userStore";
 import { useNavigate } from "react-router";
 import { useProjectId } from "../stores/projectIdStore";
 import ScrollLinkedProjects from "../Components/HorizontalScrollBarProjects";
+import type { AccountDTO } from "../types/Account";
 
 const ProjectOverview = () => {
 
@@ -19,7 +20,7 @@ const ProjectOverview = () => {
         data: account,
         isLoading: isAccountLoading,
         error: accountError
-    } = useQuery({
+    } = useQuery<AccountDTO>({
         queryKey: ["account"],
         queryFn: async () => {
             const response = await fetch(`${API_URL}/${user.id}/accounts/${user.id}`);
@@ -44,21 +45,25 @@ const ProjectOverview = () => {
     }
     console.log(projectId)
 
-    console.log(account.madeProjects)
+   
 
+    if (account !== undefined) {
+         console.log(account.madeProjects)
     return (
         <>
             <Card>
-                <Col>
-                    {/* als de rol van ingelogd account OWNER is dan wordt knop geshowed */}
-                    {account.role === "OWNER" && <NewProjectModal />}
-                </Col>
                 <Col>
                     <h2>
                         Project Overview page
                     </h2>
                     <Col>
-                        <h4>logged in as:</h4> {account.name}
+                    <br/>
+                <Col>
+                    {/* als de rol van ingelogd account OWNER is dan wordt knop geshowed */}
+                    {account.role === "OWNER" && <NewProjectModal />}
+                </Col>
+                        <h4>logged in as: <br/>{account.name}</h4>
+                        
                         <button onClick={() => logout()}>logout</button>
                     </Col>
                 </Col>
@@ -98,7 +103,7 @@ const ProjectOverview = () => {
                 </div>
             </Card>
         </>
-    );
+    )}
 };
 
 export default ProjectOverview;

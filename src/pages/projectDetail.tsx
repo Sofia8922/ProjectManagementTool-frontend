@@ -10,6 +10,7 @@ import { API_URL } from "../App";
 import ScrollLinkedTasks from "../Components/HorizontalScrollBarTasks";
 import ProgressCalculator from "../Components/ProgressCalculator";
 import { status } from "../types/Task";
+import type { ProjectDTO } from "../types/Project";
 
 const ProjectDetail = () => {
     // get projectById
@@ -22,7 +23,7 @@ const ProjectDetail = () => {
         data: project,
         isLoading: isProjectLoading,
         error: projectError
-    } = useQuery({
+    } = useQuery<ProjectDTO>({
         queryKey: ["project"],
         queryFn: async () => {
             const response = await fetch(`${API_URL}/${user.id}/projects/${projectId}`);
@@ -49,6 +50,8 @@ const ProjectDetail = () => {
     if (!projectId) {
         navigate("/projectOverview")
     }
+
+    if(project !== undefined) {
     return (
         <Container fluid>
             <Row>
@@ -71,7 +74,7 @@ const ProjectDetail = () => {
                             <h2>{project.name}</h2>
                             Tasks completed
                             <h2><ProgressCalculator id={project.id} /></h2>
-                            <EditProjectModal />
+                            <EditProjectModal project = {project} />
                             project description
                             <h2>{project.description}</h2>
                         </div>
@@ -102,7 +105,7 @@ const ProjectDetail = () => {
                                 <h3>completed tasks</h3>
                                 {project.tasks && project.tasks.length > 0 ? (
                                     <>
-                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status === status.COMPLETED && task.status !== status.SCRAPPED)}>
+                                        <ScrollLinkedTasks data={project.tasks.filter(task => task.status === status.COMPLETED)}>
                                         </ScrollLinkedTasks>
                                     </>) : (<>No tasks found</>)}
                                 {/* {map project.tasks if status==completed} + onclick setTaskId*/}
@@ -154,7 +157,7 @@ const ProjectDetail = () => {
                 </Col>
             </Row>
         </Container>
-    )
+    )}
 }
 
 export default ProjectDetail;
