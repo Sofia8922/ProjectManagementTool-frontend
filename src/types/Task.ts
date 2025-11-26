@@ -26,6 +26,7 @@ export interface TaskEditDTO {
   name: string;
   content: string;
   status: status;
+  assignedDevelopers: AccountShortDTO[];
 }
 
 export interface TaskShortDTO {
