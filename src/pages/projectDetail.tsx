@@ -136,7 +136,7 @@ const ProjectDetail = () => {
 
                             <div>
                                 <h4>dev team</h4>
-                                {project.developers.map(developer => (
+                                {project.projectDevelopers.map(developer => (
                                     <li key={developer.id}>
                                         {developer.name}
                                     </li>
@@ -145,7 +145,7 @@ const ProjectDetail = () => {
                             </div>
                             <div>
                                 <h4>customers</h4>
-                                {project.customers.map(customer => (
+                                {project.projectCustomers.map(customer => (
                                     <li key={customer.id}>
                                         {customer.name}
                                     </li>
