@@ -9,7 +9,7 @@ import {
 import { useRef } from "react"
 import { Card } from "react-bootstrap"
 
-export default function ScrollLinked({ data }) {
+export default function ScrollLinked({ data }: any) {
     const ref = useRef(null)
     const { scrollXProgress } = useScroll({ container: ref })
     const maskImage = useScrollOverflowMask(scrollXProgress)
@@ -28,7 +28,7 @@ export default function ScrollLinked({ data }) {
             </svg>
             <motion.ul ref={ref} style={{ maskImage }}>
 
-                {data.map(info =>
+                {data.map(({info}: any) =>
                 <Card id="example">
                     <li key={info.id}>
                         {info.name}
